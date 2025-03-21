@@ -8,12 +8,18 @@ import { Quote } from '../../domain/quote.domain';
 
 import * as crypto from 'node:crypto';
 import { QuoteError } from '../exceptions/quote.error.enum';
+import {
+  QUOTE_REPOSITORY,
+  QuoteRepository,
+} from '../repository/quote.repository';
 
 @Injectable()
 export class QuoteService {
   constructor(
     @Inject(EXCHANGE_RATE_PROVIDER)
     private readonly exchangeRateProvider: ExchangeRateProvider,
+    @Inject(QUOTE_REPOSITORY)
+    private readonly quoteRepository: QuoteRepository,
   ) {}
 
   async create(createQuoteDto: CreateQuoteDto): Promise<Quote> {
@@ -36,6 +42,8 @@ export class QuoteService {
         timestamp,
         expiresAt: new Date(timestamp.getTime() + 5 * 60 * 1000),
       });
+
+      await this.quoteRepository.create(quote);
 
       return quote;
     } catch (error) {
