@@ -8,9 +8,14 @@ import {
 } from '../../application/repository/exchange-rate.provider.interface';
 import { CreateQuoteDto } from '../../application/dto/create-quote.dto';
 import { currency } from '../../domain/currency.enum';
-import { ConflictException } from '@nestjs/common';
+import {
+  ConflictException,
+  GoneException,
+  NotFoundException,
+} from '@nestjs/common';
 import { QuoteError } from '../../application/exceptions/quote.error.enum';
 import { QUOTE_REPOSITORY } from '../../application/repository/quote.repository';
+import * as crypto from 'node:crypto';
 
 describe('QuoteController Integration Tests', () => {
   let controller: QuoteController;
@@ -21,6 +26,7 @@ describe('QuoteController Integration Tests', () => {
   };
 
   const mockQuoteRepository = {
+    findOne: jest.fn(),
     create: jest.fn(),
   };
 
@@ -47,8 +53,62 @@ describe('QuoteController Integration Tests', () => {
     );
   });
 
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
   afterEach(() => {
+    jest.useRealTimers();
     jest.clearAllMocks();
+  });
+
+  describe('findOne', () => {
+    const mockQuote = {
+      id: crypto.randomUUID(),
+      amount: 100,
+      from: currency.USDC,
+      to: currency.CLP,
+      rate: 850.5,
+      convertedAmount: 85050,
+      timestamp: new Date('2025-01-01'),
+      expiresAt: new Date('2025-01-01T00:05:00.000Z'),
+    };
+
+    it('should return a quote successfully', async () => {
+      jest.setSystemTime(new Date('2025-01-01'));
+
+      mockQuoteRepository.findOne.mockResolvedValue(mockQuote);
+
+      const response = await controller.findOne(mockQuote.id);
+
+      expect(response).toEqual(mockQuote);
+    });
+
+    it('should return 404 Not Found when quote is not found', async () => {
+      mockQuoteRepository.findOne.mockResolvedValue(null);
+
+      await expect(controller.findOne(crypto.randomUUID())).rejects.toThrow(
+        new NotFoundException(QuoteError.QUOTE_NOT_FOUND),
+      );
+    });
+
+    it('should return 410 Gone when quote is expired', async () => {
+      jest.setSystemTime(new Date('2025-01-01T00:05:00.001Z'));
+
+      mockQuoteRepository.findOne.mockResolvedValue(mockQuote);
+
+      await expect(controller.findOne(mockQuote.id)).rejects.toThrow(
+        new GoneException(QuoteError.QUOTE_EXPIRED),
+      );
+    });
+
+    it('should return 409 Conflict when failed to get quote', async () => {
+      mockQuoteRepository.findOne.mockRejectedValue(new Error('API Error'));
+
+      await expect(controller.findOne(crypto.randomUUID())).rejects.toThrow(
+        new ConflictException(QuoteError.FAILED_TO_GET_QUOTE),
+      );
+    });
   });
 
   describe('create', () => {
