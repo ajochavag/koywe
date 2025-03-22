@@ -8,6 +8,7 @@ import {
 import { CreateQuoteDto } from '../../dto/create-quote.dto';
 import { currency } from '../../../domain/currency.enum';
 import { QuoteError } from '../../exceptions/quote.error.enum';
+import { QUOTE_REPOSITORY } from '../../repository/quote.repository';
 
 describe('QuoteService', () => {
   let service: QuoteService;
@@ -17,6 +18,10 @@ describe('QuoteService', () => {
     getRate: jest.fn(),
   };
 
+  const mockQuoteRepository = {
+    create: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -24,6 +29,10 @@ describe('QuoteService', () => {
         {
           provide: EXCHANGE_RATE_PROVIDER,
           useValue: mockExchangeRateProvider,
+        },
+        {
+          provide: QUOTE_REPOSITORY,
+          useValue: mockQuoteRepository,
         },
       ],
     }).compile();
@@ -73,6 +82,8 @@ describe('QuoteService', () => {
         createQuoteDto.from,
         createQuoteDto.to,
       );
+
+      expect(mockQuoteRepository.create).toHaveBeenCalledWith(newQuote);
 
       expect(newQuote.id).toBeDefined();
       expect(newQuote.from).toBe(createQuoteDto.from);

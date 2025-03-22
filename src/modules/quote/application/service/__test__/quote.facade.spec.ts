@@ -4,12 +4,17 @@ import { QuoteService } from '../quote.service';
 import { CreateQuoteDto } from '../../dto/create-quote.dto';
 import { currency } from '../../../domain/currency.enum';
 import { Quote } from '../../../domain/quote.domain';
+import { QUOTE_REPOSITORY } from '../../repository/quote.repository';
 
 describe('QuoteFacade', () => {
   let facade: QuoteFacade;
   let quoteService: QuoteService;
 
   const mockQuoteService = {
+    create: jest.fn(),
+  };
+
+  const mockQuoteRepository = {
     create: jest.fn(),
   };
 
@@ -20,6 +25,10 @@ describe('QuoteFacade', () => {
         {
           provide: QuoteService,
           useValue: mockQuoteService,
+        },
+        {
+          provide: QUOTE_REPOSITORY,
+          useValue: mockQuoteRepository,
         },
       ],
     }).compile();

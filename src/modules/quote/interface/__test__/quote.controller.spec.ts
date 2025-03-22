@@ -10,6 +10,7 @@ import { CreateQuoteDto } from '../../application/dto/create-quote.dto';
 import { currency } from '../../domain/currency.enum';
 import { ConflictException } from '@nestjs/common';
 import { QuoteError } from '../../application/exceptions/quote.error.enum';
+import { QUOTE_REPOSITORY } from '../../application/repository/quote.repository';
 
 describe('QuoteController Integration Tests', () => {
   let controller: QuoteController;
@@ -17,6 +18,10 @@ describe('QuoteController Integration Tests', () => {
 
   const mockExchangeRateProvider = {
     getRate: jest.fn(),
+  };
+
+  const mockQuoteRepository = {
+    create: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -28,6 +33,10 @@ describe('QuoteController Integration Tests', () => {
         {
           provide: EXCHANGE_RATE_PROVIDER,
           useValue: mockExchangeRateProvider,
+        },
+        {
+          provide: QUOTE_REPOSITORY,
+          useValue: mockQuoteRepository,
         },
       ],
     }).compile();
