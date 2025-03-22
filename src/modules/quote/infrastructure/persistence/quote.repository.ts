@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { QuoteRepository as IQuoteRepository } from '../../application/repository/quote.repository';
-import { PrismaService } from 'src/modules/common/infrastructure/prisma/prisma.service';
+import { PrismaService } from '@/modules/common/infrastructure/prisma/prisma.service';
 import { Quote } from '../../domain/quote.domain';
 
 @Injectable()

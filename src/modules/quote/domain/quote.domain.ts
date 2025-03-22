@@ -1,4 +1,4 @@
-import { Base } from 'src/modules/common/domain/base.domain';
+import { Base } from '@/modules/common/domain/base.domain';
 import { currency } from './currency.enum';
 
 export class Quote extends Base {
