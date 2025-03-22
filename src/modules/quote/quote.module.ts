@@ -7,6 +7,7 @@ import { QuoteFacade } from './application/service/quote.facade';
 import { CommonModule } from '../common/common.module';
 import { QUOTE_REPOSITORY } from './application/repository/quote.repository';
 import { QuoteRepository } from './infrastructure/persistence/quote.repository';
+import { QuoteResponseMapper } from './application/mapper/response/quote.response.mapper';
 
 @Module({
   imports: [CommonModule],
@@ -14,6 +15,7 @@ import { QuoteRepository } from './infrastructure/persistence/quote.repository';
   providers: [
     QuoteService,
     QuoteFacade,
+    QuoteResponseMapper,
     {
       provide: EXCHANGE_RATE_PROVIDER,
       useClass: CryptomktProvider,

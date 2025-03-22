@@ -1,5 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConflictException } from '@nestjs/common';
+import {
+  ConflictException,
+  GoneException,
+  NotFoundException,
+} from '@nestjs/common';
 import { QuoteService } from '../quote.service';
 import {
   EXCHANGE_RATE_PROVIDER,
@@ -9,6 +13,7 @@ import { CreateQuoteDto } from '../../dto/create-quote.dto';
 import { currency } from '../../../domain/currency.enum';
 import { QuoteError } from '../../exceptions/quote.error.enum';
 import { QUOTE_REPOSITORY } from '../../repository/quote.repository';
+import * as crypto from 'node:crypto';
 
 describe('QuoteService', () => {
   let service: QuoteService;
@@ -19,6 +24,7 @@ describe('QuoteService', () => {
   };
 
   const mockQuoteRepository = {
+    findOne: jest.fn(),
     create: jest.fn(),
   };
 
@@ -45,6 +51,70 @@ describe('QuoteService', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  describe('getQuoteById', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    const repositoryQuote = {
+      id: crypto.randomUUID(),
+      from: currency.USDC,
+      to: currency.CLP,
+      amount: 100,
+      rate: 850.5,
+      convertedAmount: 85050,
+      timestamp: new Date('2025-01-01'),
+      expiresAt: new Date('2025-01-01T00:05:00.000Z'),
+    };
+
+    it('should return a quote successfully', async () => {
+      jest.setSystemTime(new Date('2025-01-01'));
+
+      mockQuoteRepository.findOne.mockResolvedValue(repositoryQuote);
+
+      const quote = await service.findOne(repositoryQuote.id);
+
+      expect(quote.id).toBe(repositoryQuote.id);
+      expect(quote.from).toBe(repositoryQuote.from);
+      expect(quote.to).toBe(repositoryQuote.to);
+      expect(quote.amount).toBe(repositoryQuote.amount);
+      expect(quote.rate).toBe(repositoryQuote.rate);
+      expect(quote.convertedAmount).toBe(repositoryQuote.convertedAmount);
+      expect(quote.timestamp).toEqual(repositoryQuote.timestamp);
+      expect(quote.expiresAt).toEqual(repositoryQuote.expiresAt);
+    });
+
+    it('should throw an error when quote is not found', async () => {
+      mockQuoteRepository.findOne.mockResolvedValue(null);
+
+      await expect(service.findOne(crypto.randomUUID())).rejects.toThrow(
+        new NotFoundException(QuoteError.QUOTE_NOT_FOUND),
+      );
+    });
+
+    it('should throw an error when quote is expired', async () => {
+      jest.setSystemTime(new Date('2025-01-01T00:05:00.001Z'));
+
+      mockQuoteRepository.findOne.mockResolvedValue(repositoryQuote);
+
+      await expect(service.findOne(repositoryQuote.id)).rejects.toThrow(
+        new GoneException(QuoteError.QUOTE_EXPIRED),
+      );
+    });
+
+    it('should throw an error when failed to get quote', async () => {
+      mockQuoteRepository.findOne.mockRejectedValue(new Error('API Error'));
+
+      await expect(service.findOne(crypto.randomUUID())).rejects.toThrow(
+        new ConflictException(QuoteError.FAILED_TO_GET_QUOTE),
+      );
+    });
   });
 
   describe('create', () => {
