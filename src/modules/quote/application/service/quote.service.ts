@@ -1,4 +1,10 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  GoneException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateQuoteDto } from '../dto/create-quote.dto';
 import {
   EXCHANGE_RATE_PROVIDER,
@@ -21,6 +27,31 @@ export class QuoteService {
     @Inject(QUOTE_REPOSITORY)
     private readonly quoteRepository: QuoteRepository,
   ) {}
+
+  async findOne(id: string): Promise<Quote> {
+    try {
+      const quote = await this.quoteRepository.findOne(id);
+
+      if (!quote) {
+        throw new NotFoundException(QuoteError.QUOTE_NOT_FOUND);
+      }
+
+      if (quote.expiresAt <= new Date()) {
+        throw new GoneException(QuoteError.QUOTE_EXPIRED);
+      }
+
+      return quote;
+    } catch (error) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof GoneException
+      ) {
+        throw error;
+      }
+
+      throw new ConflictException(QuoteError.FAILED_TO_GET_QUOTE);
+    }
+  }
 
   async create(createQuoteDto: CreateQuoteDto): Promise<Quote> {
     const { amount, from, to } = createQuoteDto;
