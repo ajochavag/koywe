@@ -15,6 +15,7 @@ import {
 } from '@nestjs/common';
 import { QuoteError } from '../../application/exceptions/quote.error.enum';
 import { QUOTE_REPOSITORY } from '../../application/repository/quote.repository';
+import { PassportModule } from '@nestjs/passport';
 import * as crypto from 'node:crypto';
 
 describe('QuoteController Integration Tests', () => {
@@ -32,6 +33,7 @@ describe('QuoteController Integration Tests', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [PassportModule.register({ defaultStrategy: 'jwt' })],
       controllers: [QuoteController],
       providers: [
         QuoteFacade,
