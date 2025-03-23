@@ -3,11 +3,12 @@ import { AuthController } from '../auth.controller';
 import { AuthFacade } from '../../application/service/auth.facade';
 import { AuthService } from '../../application/service/auth.service';
 import { USER_REPOSITORY } from '../../application/repository/user.repository';
-import { CreateUserDto } from '../../application/dto/create-user.dto';
-import { ConflictException } from '@nestjs/common';
+import { CreateUserDto, LoginUserDto } from '../../application/dto';
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { AuthError } from '../../application/exceptions/auth.error.enum';
 import { JwtService } from '@nestjs/jwt';
 import * as crypto from 'node:crypto';
+import * as bcrypt from 'bcrypt';
 
 describe('AuthController Integration Tests', () => {
   let controller: AuthController;
@@ -69,11 +70,11 @@ describe('AuthController Integration Tests', () => {
 
       expect(response).toEqual(mockUserResponse);
       expect(mockUserRepository.findOne).toHaveBeenCalledWith(
-        createUserDto.username,
+        createUserDto.username.toLowerCase().trim(),
       );
       expect(mockUserRepository.createUser).toHaveBeenCalled();
       expect(mockJwtService.sign).toHaveBeenCalledWith({
-        username: createUserDto.username,
+        username: createUserDto.username.toLowerCase().trim(),
       });
     });
 
@@ -104,6 +105,74 @@ describe('AuthController Integration Tests', () => {
 
       await expect(
         controller.register(invalidDto as CreateUserDto),
+      ).rejects.toThrow();
+    });
+  });
+
+  describe('login', () => {
+    const loginUserDto: LoginUserDto = {
+      username: 'test@example.com',
+      password: 'Test123!',
+    };
+
+    const mockUser = {
+      id: crypto.randomUUID(),
+      username: 'test@example.com',
+      password: bcrypt.hashSync('Test123!', 10),
+    };
+
+    const mockUserResponse = {
+      id: mockUser.id,
+      username: mockUser.username,
+      token: 'mock.jwt.token',
+    };
+
+    beforeEach(() => {
+      mockJwtService.sign.mockReturnValue(mockUserResponse.token);
+    });
+
+    it('should login a user successfully', async () => {
+      mockUserRepository.findOne.mockResolvedValue(mockUser);
+      const normalizedUsername = loginUserDto.username.toLowerCase().trim();
+
+      const response = await controller.login(loginUserDto);
+
+      expect(response).toEqual(mockUserResponse);
+      expect(mockUserRepository.findOne).toHaveBeenCalledWith(
+        normalizedUsername,
+      );
+      expect(mockJwtService.sign).toHaveBeenCalledWith({
+        username: normalizedUsername,
+      });
+    });
+
+    it('should return 401 Unauthorized when user is not found', async () => {
+      mockUserRepository.findOne.mockResolvedValue(null);
+
+      await expect(controller.login(loginUserDto)).rejects.toThrow(
+        new UnauthorizedException(AuthError.INVALID_CREDENTIALS),
+      );
+    });
+
+    it('should return 401 Unauthorized when password is invalid', async () => {
+      mockUserRepository.findOne.mockResolvedValue({
+        ...mockUser,
+        password: bcrypt.hashSync('WrongPassword', 10),
+      });
+
+      await expect(controller.login(loginUserDto)).rejects.toThrow(
+        new UnauthorizedException(AuthError.INVALID_CREDENTIALS),
+      );
+    });
+
+    it('should validate input DTO', async () => {
+      const invalidDto = {
+        username: 'invalid-email',
+        password: '',
+      };
+
+      await expect(
+        controller.login(invalidDto as LoginUserDto),
       ).rejects.toThrow();
     });
   });
