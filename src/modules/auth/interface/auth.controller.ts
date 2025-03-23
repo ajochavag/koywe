@@ -6,9 +6,12 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import {
   LoginOperation,
   LoginResponses,
+  RefreshTokenOperation,
+  RefreshTokenResponses,
   RegisterOperation,
   RegisterResponses,
 } from '../swagger/auth.swagger';
+import { RefreshTokenDto } from '../application/dto/refresh-token.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -34,5 +37,17 @@ export class AuthController {
   @ApiBody({ type: LoginUserDto })
   login(@Body() loginUserDto: LoginUserDto): Promise<UserResponse> {
     return this.authFacade.login(loginUserDto);
+  }
+
+  @Post('refresh')
+  @ApiOperation(RefreshTokenOperation)
+  @ApiResponse(RefreshTokenResponses.SUCCESS)
+  @ApiResponse(RefreshTokenResponses.UNAUTHORIZED)
+  @ApiResponse(RefreshTokenResponses.BAD_REQUEST)
+  @ApiBody({ type: RefreshTokenDto })
+  refreshToken(
+    @Body() refreshTokenDto: RefreshTokenDto,
+  ): Promise<UserResponse> {
+    return this.authFacade.refreshToken(refreshTokenDto.token);
   }
 }

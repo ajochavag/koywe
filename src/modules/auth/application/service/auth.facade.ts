@@ -14,4 +14,8 @@ export class AuthFacade {
   async login(loginUserDto: LoginUserDto): Promise<UserResponse> {
     return this.authService.login(loginUserDto);
   }
+
+  async refreshToken(token: string): Promise<UserResponse> {
+    return this.authService.refreshToken(token);
+  }
 }
