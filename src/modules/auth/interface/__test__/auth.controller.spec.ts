@@ -9,21 +9,32 @@ import { AuthError } from '../../application/exceptions/auth.error.enum';
 import { JwtService } from '@nestjs/jwt';
 import * as crypto from 'node:crypto';
 import * as bcrypt from 'bcrypt';
+import { RefreshTokenDto } from '../../application/dto/refresh-token.dto';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 describe('AuthController Integration Tests', () => {
   let controller: AuthController;
+  let configService: ConfigService;
 
   const mockUserRepository = {
     findOne: jest.fn(),
     createUser: jest.fn(),
   };
 
+  const mockAccessToken = 'mock.access.token';
+  const mockRefreshToken = 'mock.refresh.token';
   const mockJwtService = {
     sign: jest.fn(),
+    verify: jest.fn(),
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: '.env.test',
+        }),
+      ],
       controllers: [AuthController],
       providers: [
         AuthFacade,
@@ -40,6 +51,15 @@ describe('AuthController Integration Tests', () => {
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
+    configService = module.get<ConfigService>(ConfigService);
+
+    mockJwtService.sign.mockImplementation((_, options) => {
+      if (options?.secret === configService.get('JWT_REFRESH_SECRET')) {
+        return mockRefreshToken;
+      }
+
+      return mockAccessToken;
+    });
   });
 
   afterEach(() => {
@@ -55,16 +75,17 @@ describe('AuthController Integration Tests', () => {
     const mockUserResponse = {
       id: crypto.randomUUID(),
       username: 'test@example.com',
-      token: 'mock.jwt.token',
+      accessToken: mockAccessToken,
+      refreshToken: mockRefreshToken,
     };
-
-    beforeEach(() => {
-      mockJwtService.sign.mockReturnValue(mockUserResponse.token);
-    });
 
     it('should register a user successfully', async () => {
       mockUserRepository.findOne.mockResolvedValue(null);
-      mockUserRepository.createUser.mockResolvedValue(mockUserResponse);
+      mockUserRepository.createUser.mockResolvedValue({
+        id: mockUserResponse.id,
+        username: mockUserResponse.username,
+        password: 'hashedPassword',
+      });
 
       const response = await controller.register(createUserDto);
 
@@ -73,9 +94,7 @@ describe('AuthController Integration Tests', () => {
         createUserDto.username.toLowerCase().trim(),
       );
       expect(mockUserRepository.createUser).toHaveBeenCalled();
-      expect(mockJwtService.sign).toHaveBeenCalledWith({
-        username: createUserDto.username.toLowerCase().trim(),
-      });
+      expect(mockJwtService.sign).toHaveBeenCalledTimes(2);
     });
 
     it('should return 409 Conflict when user already exists', async () => {
@@ -124,12 +143,9 @@ describe('AuthController Integration Tests', () => {
     const mockUserResponse = {
       id: mockUser.id,
       username: mockUser.username,
-      token: 'mock.jwt.token',
+      accessToken: mockAccessToken,
+      refreshToken: mockRefreshToken,
     };
-
-    beforeEach(() => {
-      mockJwtService.sign.mockReturnValue(mockUserResponse.token);
-    });
 
     it('should login a user successfully', async () => {
       mockUserRepository.findOne.mockResolvedValue(mockUser);
@@ -141,9 +157,7 @@ describe('AuthController Integration Tests', () => {
       expect(mockUserRepository.findOne).toHaveBeenCalledWith(
         normalizedUsername,
       );
-      expect(mockJwtService.sign).toHaveBeenCalledWith({
-        username: normalizedUsername,
-      });
+      expect(mockJwtService.sign).toHaveBeenCalledTimes(2);
     });
 
     it('should return 401 Unauthorized when user is not found', async () => {
@@ -174,6 +188,62 @@ describe('AuthController Integration Tests', () => {
       await expect(
         controller.login(invalidDto as LoginUserDto),
       ).rejects.toThrow();
+    });
+  });
+
+  describe('refreshToken', () => {
+    const refreshTokenDto: RefreshTokenDto = {
+      token: mockRefreshToken,
+    };
+
+    const mockUser = {
+      id: crypto.randomUUID(),
+      username: 'test@example.com',
+      password: 'hashedPassword',
+    };
+
+    const mockUserResponse = {
+      id: mockUser.id,
+      username: mockUser.username,
+      accessToken: mockAccessToken,
+      refreshToken: mockRefreshToken,
+    };
+
+    it('should refresh tokens successfully', async () => {
+      const mockPayload = { username: mockUser.username };
+      mockJwtService.verify.mockReturnValue(mockPayload);
+      mockUserRepository.findOne.mockResolvedValue(mockUser);
+
+      const response = await controller.refreshToken(refreshTokenDto);
+
+      expect(response).toEqual(mockUserResponse);
+      expect(mockJwtService.verify).toHaveBeenCalledWith(
+        refreshTokenDto.token,
+        {
+          secret: configService.get('JWT_REFRESH_SECRET'),
+        },
+      );
+      expect(mockJwtService.sign).toHaveBeenCalledTimes(2);
+    });
+
+    it('should return 401 Unauthorized when token is invalid', async () => {
+      mockJwtService.verify.mockImplementation(() => {
+        throw new Error('Invalid token');
+      });
+
+      await expect(controller.refreshToken(refreshTokenDto)).rejects.toThrow(
+        new UnauthorizedException(AuthError.INVALID_TOKEN),
+      );
+    });
+
+    it('should return 401 Unauthorized when user not found', async () => {
+      const mockPayload = { username: 'nonexistent@example.com' };
+      mockJwtService.verify.mockReturnValue(mockPayload);
+      mockUserRepository.findOne.mockResolvedValue(null);
+
+      await expect(controller.refreshToken(refreshTokenDto)).rejects.toThrow(
+        new UnauthorizedException(AuthError.INVALID_TOKEN),
+      );
     });
   });
 });

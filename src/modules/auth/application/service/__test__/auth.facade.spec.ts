@@ -10,9 +10,12 @@ describe('AuthFacade', () => {
   let facade: AuthFacade;
   let authService: AuthService;
 
+  const mockAccessToken = 'mock.access.token';
+  const mockRefreshToken = 'mock.refresh.token';
   const mockAuthService = {
     createUser: jest.fn(),
     login: jest.fn(),
+    refreshToken: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -43,7 +46,8 @@ describe('AuthFacade', () => {
     const mockUserResponse = {
       id: crypto.randomUUID(),
       username: 'test@example.com',
-      token: 'mock.jwt.token',
+      accessToken: mockAccessToken,
+      refreshToken: mockRefreshToken,
     };
 
     it('should delegate user creation to AuthService', async () => {
@@ -79,7 +83,8 @@ describe('AuthFacade', () => {
     const mockUserResponse = {
       id: crypto.randomUUID(),
       username: 'test@example.com',
-      token: 'mock.jwt.token',
+      accessToken: mockAccessToken,
+      refreshToken: mockRefreshToken,
     };
 
     it('should delegate login to AuthService', async () => {
@@ -96,6 +101,32 @@ describe('AuthFacade', () => {
       mockAuthService.login.mockRejectedValue(error);
 
       await expect(facade.login(loginUserDto)).rejects.toThrow(error);
+    });
+  });
+
+  describe('refreshToken', () => {
+    const mockUserResponse = {
+      id: crypto.randomUUID(),
+      username: 'test@example.com',
+      accessToken: mockAccessToken,
+      refreshToken: mockRefreshToken,
+    };
+
+    it('should delegate token refresh to AuthService', async () => {
+      mockAuthService.refreshToken.mockResolvedValue(mockUserResponse);
+      const token = 'valid.refresh.token';
+
+      const response = await facade.refreshToken(token);
+
+      expect(authService.refreshToken).toHaveBeenCalledWith(token);
+      expect(response).toEqual(mockUserResponse);
+    });
+
+    it('should propagate error from AuthService when token is invalid', async () => {
+      const error = new UnauthorizedException(AuthError.INVALID_TOKEN);
+      mockAuthService.refreshToken.mockRejectedValue(error);
+
+      await expect(facade.refreshToken('invalid.token')).rejects.toThrow(error);
     });
   });
 });
