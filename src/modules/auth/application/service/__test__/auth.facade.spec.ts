@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthFacade } from '../auth.facade';
 import { AuthService } from '../auth.service';
-import { CreateUserDto } from '../../dto/create-user.dto';
-import { ConflictException } from '@nestjs/common';
+import { CreateUserDto, LoginUserDto } from '../../dto';
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { AuthError } from '../../exceptions/auth.error.enum';
 import * as crypto from 'node:crypto';
 
@@ -12,6 +12,7 @@ describe('AuthFacade', () => {
 
   const mockAuthService = {
     createUser: jest.fn(),
+    login: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -66,6 +67,35 @@ describe('AuthFacade', () => {
       mockAuthService.createUser.mockRejectedValue(error);
 
       await expect(facade.createUser(createUserDto)).rejects.toThrow(error);
+    });
+  });
+
+  describe('login', () => {
+    const loginUserDto: LoginUserDto = {
+      username: 'test@example.com',
+      password: 'Test123!',
+    };
+
+    const mockUserResponse = {
+      id: crypto.randomUUID(),
+      username: 'test@example.com',
+      token: 'mock.jwt.token',
+    };
+
+    it('should delegate login to AuthService', async () => {
+      mockAuthService.login.mockResolvedValue(mockUserResponse);
+
+      const response = await facade.login(loginUserDto);
+
+      expect(authService.login).toHaveBeenCalledWith(loginUserDto);
+      expect(response).toEqual(mockUserResponse);
+    });
+
+    it('should propagate error from AuthService when credentials are invalid', async () => {
+      const error = new UnauthorizedException(AuthError.INVALID_CREDENTIALS);
+      mockAuthService.login.mockRejectedValue(error);
+
+      await expect(facade.login(loginUserDto)).rejects.toThrow(error);
     });
   });
 });
