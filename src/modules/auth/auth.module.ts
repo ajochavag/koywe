@@ -30,5 +30,6 @@ import { JwtStrategy } from './infrastructure/strategy/jwt.strategy';
       useClass: UserRepository,
     },
   ],
+  exports: [AuthFacade, JwtStrategy, PassportModule],
 })
 export class AuthModule {}
