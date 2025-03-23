@@ -5,12 +5,15 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateQuoteDto } from '../application/dto/create-quote.dto';
 import { Quote } from '../domain/quote.domain';
 import { QuoteFacade } from '../application/service/quote.facade';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('quote')
+@UseGuards(AuthGuard())
 export class QuoteController {
   constructor(private readonly quoteFacade: QuoteFacade) {}
 
