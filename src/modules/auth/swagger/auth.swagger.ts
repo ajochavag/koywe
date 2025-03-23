@@ -8,23 +8,37 @@ export const RegisterOperation = {
 
 export const LoginOperation = {
   summary: 'Login user',
-  description: 'Authenticates a user and returns a JWT token',
+  description: 'Authenticates a user and returns access and refresh tokens',
+};
+
+export const RefreshTokenOperation = {
+  summary: 'Refresh JWT token',
+  description:
+    'Generates new access and refresh tokens using a valid refresh token',
+};
+
+const TokenResponseSchema = {
+  properties: {
+    id: { type: 'string', example: '123e4567-e89b-12d3-a456-426614174000' },
+    username: { type: 'string', example: 'john.doe@example.com' },
+    accessToken: {
+      type: 'string',
+      example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+      description: 'JWT access token valid for 15 minutes',
+    },
+    refreshToken: {
+      type: 'string',
+      example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+      description: 'JWT refresh token valid for 7 days',
+    },
+  },
 };
 
 export const RegisterResponses = {
   CREATED: {
     status: 201,
     description: 'User created successfully',
-    schema: {
-      properties: {
-        id: { type: 'string', example: '123e4567-e89b-12d3-a456-426614174000' },
-        username: { type: 'string', example: 'john.doe@example.com' },
-        token: {
-          type: 'string',
-          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-        },
-      },
-    },
+    schema: TokenResponseSchema,
   },
   USER_EXISTS: {
     status: 409,
@@ -72,16 +86,7 @@ export const LoginResponses = {
   SUCCESS: {
     status: 200,
     description: 'User logged in successfully',
-    schema: {
-      properties: {
-        id: { type: 'string', example: '123e4567-e89b-12d3-a456-426614174000' },
-        username: { type: 'string', example: 'john.doe@example.com' },
-        token: {
-          type: 'string',
-          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-        },
-      },
-    },
+    schema: TokenResponseSchema,
   },
   UNAUTHORIZED: {
     status: 401,
@@ -112,3 +117,36 @@ export const LoginResponses = {
     },
   },
 } as const;
+
+export const RefreshTokenResponses = {
+  SUCCESS: {
+    status: 200,
+    description: 'Tokens refreshed successfully',
+    schema: TokenResponseSchema,
+  },
+  UNAUTHORIZED: {
+    status: 401,
+    description: AuthError.INVALID_TOKEN,
+    schema: {
+      properties: {
+        statusCode: { type: 'number', example: 401 },
+        message: { type: 'string', example: AuthError.INVALID_TOKEN },
+        error: { type: 'string', example: 'Unauthorized' },
+      },
+    },
+  },
+  BAD_REQUEST: {
+    status: 400,
+    description: 'Invalid token format',
+    schema: {
+      properties: {
+        statusCode: { type: 'number', example: 400 },
+        message: {
+          type: 'array',
+          example: ['token must be a valid JWT'],
+        },
+        error: { type: 'string', example: 'Bad Request' },
+      },
+    },
+  },
+};

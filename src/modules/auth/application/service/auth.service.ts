@@ -12,6 +12,7 @@ import { JwtPayload } from '../interface/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
 import { UserResponse } from '../interface/user-response.interface';
 import { LoginUserDto, CreateUserDto } from '../dto';
+import { Tokens } from '../interface/tokens.interface';
 
 @Injectable()
 export class AuthService {
@@ -46,7 +47,7 @@ export class AuthService {
       return {
         id: createdUser.id,
         username: createdUser.username,
-        token: this.getJWTToken({ username: createdUser.username }),
+        ...this.generateTokens({ username: createdUser.username }),
       };
     } catch (error) {
       if (error instanceof ConflictException) {
@@ -80,11 +81,42 @@ export class AuthService {
     return {
       id: user.id,
       username: user.username,
-      token: this.getJWTToken({ username: user.username }),
+      ...this.generateTokens({ username: user.username }),
     };
   }
 
-  private getJWTToken(payload: JwtPayload): string {
-    return this.jwtService.sign(payload);
+  async refreshToken(token: string): Promise<UserResponse> {
+    try {
+      const payload = this.jwtService.verify(token, {
+        secret: process.env.JWT_REFRESH_SECRET,
+      });
+
+      const user = await this.findOne(payload.username);
+
+      if (!user) {
+        throw new UnauthorizedException(AuthError.INVALID_TOKEN);
+      }
+
+      return {
+        id: user.id,
+        username: user.username,
+        ...this.generateTokens({ username: user.username }),
+      };
+    } catch (error) {
+      throw new UnauthorizedException(AuthError.INVALID_TOKEN);
+    }
+  }
+
+  private generateTokens(payload: JwtPayload): Tokens {
+    return {
+      accessToken: this.jwtService.sign(payload, {
+        secret: process.env.JWT_ACCESS_SECRET,
+        expiresIn: '15m',
+      }),
+      refreshToken: this.jwtService.sign(payload, {
+        secret: process.env.JWT_REFRESH_SECRET,
+        expiresIn: '7d',
+      }),
+    };
   }
 }
