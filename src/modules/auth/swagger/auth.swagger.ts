@@ -80,7 +80,7 @@ export const RegisterResponses = {
       },
     },
   },
-} as const;
+};
 
 export const LoginResponses = {
   SUCCESS: {
@@ -116,7 +116,7 @@ export const LoginResponses = {
       },
     },
   },
-} as const;
+};
 
 export const RefreshTokenResponses = {
   SUCCESS: {
