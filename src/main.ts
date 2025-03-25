@@ -13,6 +13,10 @@ async function bootstrap() {
     }),
   );
 
+  app.enableCors({
+    origin: process.env.ALLOWED_ORIGINS.split(','),
+  });
+
   const config = new DocumentBuilder()
     .setTitle('Quote API')
     .setDescription('API for currency exchange rate quotes')
