@@ -14,7 +14,16 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@monorepo/core-domain": ["libs/core/domain/src/index.ts"],
+      "@monorepo/core-domain-services": [
+        "libs/core/domain-services/src/index.ts"
+      ],
+      "@monorepo/core-use-cases": ["libs/core/use-cases/src/index.ts"],
+      "@monorepo/infrastructure": ["libs/infrastructure/src/index.ts"],
+      "@monorepo/nest": ["libs/nest/src/index.ts"],
+      "@monorepo/shared": ["libs/shared/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

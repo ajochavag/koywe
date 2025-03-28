@@ -37,7 +37,7 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/crypto-quote-monorepo-e2e/**/*"]
+      "exclude": []
     }
   ]
 }
