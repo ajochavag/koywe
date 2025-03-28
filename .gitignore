@@ -1,23 +1,12 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
 # compiled output
-/dist
-/node_modules
-/build
+dist
+tmp
+/out-tsc
 
-# Logs
-logs
-*.log
-npm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-
-# OS
-.DS_Store
-
-# Tests
-/coverage
-/.nyc_output
+# dependencies
+node_modules
 
 # IDEs and editors
 /.idea
@@ -28,29 +17,29 @@ lerna-debug.log*
 .settings/
 *.sublime-workspace
 
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
 
-# dotenv environment variable files
-.env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
+# System Files
+.DS_Store
+Thumbs.db
 
-# temp directory
-.temp
-.tmp
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
+# Nx-Firebase
+.runtimeconfig.json
+**/.emulators/*
+**/.firebase/*
+database-debug.log
+firebase-debug.log
+firestore-debug.log
+pubsub-debug.log
+ui-debug.log
 
-# Diagnostic reports (https://nodejs.org/api/report.html)
-report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+.nx

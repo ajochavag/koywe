@@ -1,238 +1,82 @@
-# 🚀 Prueba Técnica: API de Cotización de Divisas (Fiat ⇄ Crypto) con NestJS
+# Monorepo
 
-Bienvenido a este desafío para crear una **API** moderna en **NestJS** para convertir divisas fiat y criptomonedas. ¡Prepárate para demostrar tus habilidades y buenas prácticas de desarrollo!
+<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
----
+✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
 
-## 📚 Objetivo
+[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/nest?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
 
-Desarrollar una aplicación back-end en NestJS que exponga dos endpoints REST para realizar conversiones entre monedas fiat y criptomonedas. La solución debe incluir:
+## Finish your CI setup
 
-- Arquitectura modular y escalable.
-- Seguridad básica con autenticación.
-- Consulta en tiempo real a un proveedor de precios (por ejemplo, la API de Cryptomkt) o su simulación.
-- Documentación clara y concisa(deseable).
-- Pruebas unitarias y de integración (opcional).
+[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/sa8SJbZXxA)
 
-> **💡 Nota sobre la Estructura del Proyecto:** 
-> Este repositorio proporciona una estructura base que implementa el patrón Facade junto con las prácticas recomendadas de NestJS. Esta estructura es una guía para ayudarte a comenzar, pero no es un requisito estricto. Te animamos a:
-> - Adaptar la estructura según tu experiencia y criterio
-> - Implementar patrones alternativos si los consideras más apropiados
-> - Reorganizar los módulos de la manera que mejor se ajuste a tu solución
-> 
-> Lo fundamental es que tu implementación mantenga los principios de código limpio, modular y mantenible.
 
----
+## Run tasks
 
-## 🔍 Requerimientos Funcionales
+To run the dev server for your app, use:
 
-### 1️⃣ Endpoint para Crear una Cotización
+```sh
+npx nx serve crypto-quote-monorepo
+```
 
-- **Método y Ruta:** `POST /quote`
-- **Cuerpo de la Solicitud (JSON):**
-  
-  ```json
-  {
-    "amount": 1000000,
-    "from": "ARS",
-    "to": "ETH"
-  }
-  ```
+To create a production bundle:
 
-- **Campos:**
-  - **amount:** Monto a convertir.
-  - **from:** Código de la moneda origen (Ej.: ARS, CLP, MXN, USDC, BTC, ETH).
-  - **to:** Código de la moneda destino (Ej.: ETH, USDC, CLP, USD, ARS).
+```sh
+npx nx build crypto-quote-monorepo
+```
 
-- **Proceso:**
-  1. **Consulta a Proveedor de Precios:**  
-     Obtener el valor de `rate` en tiempo real consultando una API externa, por ejemplo:
-     ```
-     https://api.exchange.cryptomkt.com/api/3/public/price/rate?from={to}&to={from}
-     ```
-     > **Importante:** Si no se puede integrar la API real, simula la respuesta y documenta en el README cómo se realizaría la consulta real.
-  
-  2. **Cálculo:**  
-     Calcular el `convertedAmount` multiplicando el `amount` por el `rate` obtenido.
-  
-  3. **Gestión de Timestamps e Identificador:**  
-     - Generar un ID único para la cotización.
-     - Registrar el timestamp de generación.
-     - Establecer un `expiresAt` (por ejemplo, 5 minutos después de la creación).
-  
-  4. **Registro de la Cotización:**  
-     Almacenar en la base de datos la siguiente información:
-     - Identificador único.
-     - Valores de `from`, `to` y `amount`.
-     - Tasa de conversión (`rate`) y `convertedAmount`.
-     - Timestamp de creación y `expiresAt`.
+To see all available targets to run for a project, run:
 
-- **Respuesta Esperada: ARS -> ETH**
+```sh
+npx nx show project crypto-quote-monorepo
+```
 
-  ```json
-  {
-    "id": "a1b2c3d4",
-    "from": "ARS",
-    "to": "ETH",
-    "amount": 1000000,
-    "rate": 0.0000023,
-    "convertedAmount": 2.3,
-    "timestamp": "2025-02-03T12:00:00Z",
-    "expiresAt": "2025-02-03T12:05:00Z"
-  }
-  ```
+These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
 
-  **Respuesta Esperada: ETH -> ARS**
+[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
-  ```json
-  {
-  "id": "d4c3b2a1",
-  "from": "ETH",
-  "to": "ARS",
-  "amount": 1,
-  "rate": 434782.61,
-  "convertedAmount": 434782.61,
-  "timestamp": "2025-02-03T12:00:00Z",
-  "expiresAt": "2025-02-03T12:05:00Z"
-  }
-  ```
+## Add new projects
 
----
+While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
 
-### 2️⃣ Endpoint para Obtener una Cotización
+Use the plugin's generator to create new projects.
 
-- **Método y Ruta:** `GET /quote/:id`
-- **Proceso:**
-  - Recuperar la cotización desde la base de datos utilizando el ID proporcionado.
-  - Validar que la cotización aún sea válida (es decir, que el timestamp actual no supere el valor de `expiresAt`).
-- **Respuesta:**
-  - Si la cotización existe y es válida, devolver la información completa en formato JSON (similar al ejemplo anterior).
-  - En caso contrario, responder con el código HTTP adecuado (por ejemplo, `404 Not Found`).
+To generate a new application, use:
 
----
+```sh
+npx nx g @nx/nest:app demo
+```
 
-### 3️⃣ Registro de Cotizaciones
+To generate a new library, use:
 
-Cada cotización generada debe registrarse en la base de datos con los siguientes datos:
+```sh
+npx nx g @nx/node:lib mylib
+```
 
-- **ID único** de la cotización.
-- Valores de `from`, `to` y `amount`.
-- Tasa de conversión (`rate`) y monto convertido (`convertedAmount`).
-- Timestamps de creación y `expiresAt`.
+You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
 
-#### Opciones de Base de Datos:
-- **Opción 1:** MongoDB con Mongoose.
-- **Opción 2:** PostgreSQL con Prisma.
+[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
-> **Selecciona** la opción con la que te sientas más cómodo y **documenta** tu elección en este README.
 
----
+[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
-## 🔒 Seguridad
+## Install Nx Console
 
-### Autenticación
+Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
 
-- **Protege** ambos endpoints implementando autenticación con JWT (JSON Web Tokens).
-- Utiliza un **Guard** o middleware en NestJS para verificar la presencia y validez del JWT en el header `Authorization`.
-- Implementa endpoints para registro y login que generen y validen los JWT.
-- En caso de no proporcionar un token o ser inválido, la API debe retornar un error `401 Unauthorized`.
+[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
----
+## Useful links
 
-## 💻 Front-End (Opcional)
+Learn more:
 
-### Objetivo
+- [Learn more about this workspace setup](https://nx.dev/nx-api/nest?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
+- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
-Desarrolla una interfaz utilizando Next.js que permita:
-
-- **Crear Cotizaciones:**  
-  Un formulario donde el usuario ingrese `amount`, `from` y `to` para generar una cotización.
-  
-- **Consultar Cotizaciones:**  
-  Un campo para ingresar el ID de la cotización y mostrar sus detalles.
-
-#### Consideraciones:
-- La aplicación debe ser desarrollada utilizando Next.js
-- La interfaz debe integrarse con la API desarrollada
-- Su desarrollo es opcional para la aprobación de esta prueba
-
----
-
-## 🤖 Uso de Inteligencia Artificial
-
-Se permite y fomenta el uso de herramientas de IA (como ChatGPT, GitHub Copilot, etc.) para el desarrollo de esta prueba técnica. Sin embargo, se requiere:
-
-- Mencionar en el README qué herramientas de IA se utilizaron
-- Explicar brevemente cómo se aprovecharon estas herramientas
-- Asegurarse de entender y poder explicar todo el código generado por IA
-- Mantener un balance entre el código generado por IA y el desarrollo propio
-
-El uso de IA debe ser un complemento para mejorar la eficiencia del desarrollo, no un sustituto del entendimiento técnico.
-
----
-
-## 🛠 Requerimientos de Calidad y Herramientas
-
-- **Testing:**  
-  Implementa pruebas unitarias básicas para la lógica de negocio (por ejemplo, en los servicios que gestionan las cotizaciones).
-
-- **Linter y Formateo:**  
-  Utiliza ESLint y Prettier para mantener un código limpio, legible y coherente.
-
-- **Documentación:**  
-  Este archivo README.md debe incluir:
-  - Instrucciones para levantar la aplicación localmente (o con Docker, si decides implementarlo).
-  - Cómo ejecutar las pruebas.
-  - Detalles de las variables de entorno (incluye un archivo de ejemplo, como `.env.example`).
-  - La elección de la base de datos y cualquier configuración especial.
-
-- **Dockerización (Opcional):**  
-  Si dockerizas la aplicación, incluye un `Dockerfile` y/o `docker-compose.yml` con instrucciones para levantar tanto la aplicación como la base de datos en contenedores.
-
----
-
-## 🎯 Expectativas del Desarrollador
-
-- **Calidad y Claridad:**  
-  - Código modular, limpio y bien documentado.
-  - Fácil mantenimiento y comprensión del mismo.
-  
-- **Buenas Prácticas:**  
-  - Uso correcto de NestJS e inyección de dependencias.
-  - Aplicación de principios SOLID.
-  - Implementación del patrón Facade para centralizar la lógica de negocio.
-  
-- **Seguridad y Testing:**  
-  - Autenticación efectiva.
-  - Pruebas unitarias y de integración para respaldar la funcionalidad.
-  
-- **Documentación Completa:**  
-  Asegúrate de que el README ofrezca toda la información necesaria para levantar la aplicación, configurar variables de entorno y ejecutar pruebas.
-
-- **Front-End (Opcional):**  
-  Su integración con el back-end deberá ser funcional y demostrar la capacidad de crear y consultar cotizaciones.
-
----
-
-## 📦 Instrucciones de Entrega
-
-- **Repositorio:**
-  - Antes de comenzar, haz un fork de este repositorio para que tu solución se base en esta plantilla.
-  - El código debe subirse a un repositorio **público** en GitHub.
-  - Se te proporcionará un correo electrónico al cual deberás dar acceso como colaborador del repositorio para la revisión del código.
-  - Alternativamente, puedes enviar un archivo ZIP que incluya la carpeta `.git` para mantener el historial de commits.
-  
-  > **Nota:** Si eliges la opción del ZIP, asegúrate de que el archivo incluya todo el historial de Git para poder evaluar la evolución del desarrollo.
-
-- **README.md:**  
-  - Incluir instrucciones detalladas para levantar la aplicación (back-end y front-end si aplica).
-  - Explicar cómo ejecutar las pruebas.
-  - Documentar la configuración de variables de entorno y otra información relevante.
-  - Si implementas Docker, describe los pasos para levantar los contenedores.
-
-- **Código y Documentación:**  
-  Verifica que el código compile correctamente y la aplicación funcione sin errores. Asegúrate de que este README sea claro, completo y atractivo para otros desarrolladores.
-
----
-
-### 🚀 ¡Buena suerte y a codificar! 👩‍💻👨‍💻
+And join the Nx community:
+- [Discord](https://go.nx.dev/community)
+- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
+- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
+- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
