@@ -1,1 +1,3 @@
-export * from './lib/infrastructure.module';
+export * from './lib/models';
+export * from './lib/repositories';
+export * from './lib/services';

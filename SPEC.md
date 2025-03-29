@@ -14,12 +14,13 @@ Desarrollar una aplicación back-end en NestJS que exponga dos endpoints REST pa
 - Documentación clara y concisa(deseable).
 - Pruebas unitarias y de integración (opcional).
 
-> **💡 Nota sobre la Estructura del Proyecto:** 
+> **💡 Nota sobre la Estructura del Proyecto:**
 > Este repositorio proporciona una estructura base que implementa el patrón Facade junto con las prácticas recomendadas de NestJS. Esta estructura es una guía para ayudarte a comenzar, pero no es un requisito estricto. Te animamos a:
+>
 > - Adaptar la estructura según tu experiencia y criterio
 > - Implementar patrones alternativos si los consideras más apropiados
 > - Reorganizar los módulos de la manera que mejor se ajuste a tu solución
-> 
+>
 > Lo fundamental es que tu implementación mantenga los principios de código limpio, modular y mantenible.
 
 ---
@@ -30,7 +31,7 @@ Desarrollar una aplicación back-end en NestJS que exponga dos endpoints REST pa
 
 - **Método y Ruta:** `POST /quote`
 - **Cuerpo de la Solicitud (JSON):**
-  
+
   ```json
   {
     "amount": 1000000,
@@ -40,26 +41,31 @@ Desarrollar una aplicación back-end en NestJS que exponga dos endpoints REST pa
   ```
 
 - **Campos:**
+
   - **amount:** Monto a convertir.
   - **from:** Código de la moneda origen (Ej.: ARS, CLP, MXN, USDC, BTC, ETH).
   - **to:** Código de la moneda destino (Ej.: ETH, USDC, CLP, USD, ARS).
 
 - **Proceso:**
+
   1. **Consulta a Proveedor de Precios:**  
      Obtener el valor de `rate` en tiempo real consultando una API externa, por ejemplo:
+
      ```
      https://api.exchange.cryptomkt.com/api/3/public/price/rate?from={to}&to={from}
      ```
+
      > **Importante:** Si no se puede integrar la API real, simula la respuesta y documenta en el README cómo se realizaría la consulta real.
-  
+
   2. **Cálculo:**  
      Calcular el `convertedAmount` multiplicando el `amount` por el `rate` obtenido.
-  
-  3. **Gestión de Timestamps e Identificador:**  
+
+  3. **Gestión de Timestamps e Identificador:**
+
      - Generar un ID único para la cotización.
      - Registrar el timestamp de generación.
      - Establecer un `expiresAt` (por ejemplo, 5 minutos después de la creación).
-  
+
   4. **Registro de la Cotización:**  
      Almacenar en la base de datos la siguiente información:
      - Identificador único.
@@ -86,14 +92,14 @@ Desarrollar una aplicación back-end en NestJS que exponga dos endpoints REST pa
 
   ```json
   {
-  "id": "d4c3b2a1",
-  "from": "ETH",
-  "to": "ARS",
-  "amount": 1,
-  "rate": 434782.61,
-  "convertedAmount": 434782.61,
-  "timestamp": "2025-02-03T12:00:00Z",
-  "expiresAt": "2025-02-03T12:05:00Z"
+    "id": "d4c3b2a1",
+    "from": "ETH",
+    "to": "ARS",
+    "amount": 1,
+    "rate": 434782.61,
+    "convertedAmount": 434782.61,
+    "timestamp": "2025-02-03T12:00:00Z",
+    "expiresAt": "2025-02-03T12:05:00Z"
   }
   ```
 
@@ -121,6 +127,7 @@ Cada cotización generada debe registrarse en la base de datos con los siguiente
 - Timestamps de creación y `expiresAt`.
 
 #### Opciones de Base de Datos:
+
 - **Opción 1:** MongoDB con Mongoose.
 - **Opción 2:** PostgreSQL con Prisma.
 
@@ -147,11 +154,11 @@ Desarrolla una interfaz utilizando Next.js que permita:
 
 - **Crear Cotizaciones:**  
   Un formulario donde el usuario ingrese `amount`, `from` y `to` para generar una cotización.
-  
 - **Consultar Cotizaciones:**  
   Un campo para ingresar el ID de la cotización y mostrar sus detalles.
 
 #### Consideraciones:
+
 - La aplicación debe ser desarrollada utilizando Next.js
 - La interfaz debe integrarse con la API desarrollada
 - Su desarrollo es opcional para la aprobación de esta prueba
@@ -181,6 +188,7 @@ El uso de IA debe ser un complemento para mejorar la eficiencia del desarrollo, 
 
 - **Documentación:**  
   Este archivo README.md debe incluir:
+
   - Instrucciones para levantar la aplicación localmente (o con Docker, si decides implementarlo).
   - Cómo ejecutar las pruebas.
   - Detalles de las variables de entorno (incluye un archivo de ejemplo, como `.env.example`).
@@ -193,19 +201,16 @@ El uso de IA debe ser un complemento para mejorar la eficiencia del desarrollo, 
 
 ## 🎯 Expectativas del Desarrollador
 
-- **Calidad y Claridad:**  
+- **Calidad y Claridad:**
   - Código modular, limpio y bien documentado.
   - Fácil mantenimiento y comprensión del mismo.
-  
-- **Buenas Prácticas:**  
+- **Buenas Prácticas:**
   - Uso correcto de NestJS e inyección de dependencias.
   - Aplicación de principios SOLID.
   - Implementación del patrón Facade para centralizar la lógica de negocio.
-  
-- **Seguridad y Testing:**  
+- **Seguridad y Testing:**
   - Autenticación efectiva.
   - Pruebas unitarias y de integración para respaldar la funcionalidad.
-  
 - **Documentación Completa:**  
   Asegúrate de que el README ofrezca toda la información necesaria para levantar la aplicación, configurar variables de entorno y ejecutar pruebas.
 
@@ -217,14 +222,16 @@ El uso de IA debe ser un complemento para mejorar la eficiencia del desarrollo, 
 ## 📦 Instrucciones de Entrega
 
 - **Repositorio:**
+
   - Antes de comenzar, haz un fork de este repositorio para que tu solución se base en esta plantilla.
   - El código debe subirse a un repositorio **público** en GitHub.
   - Se te proporcionará un correo electrónico al cual deberás dar acceso como colaborador del repositorio para la revisión del código.
   - Alternativamente, puedes enviar un archivo ZIP que incluya la carpeta `.git` para mantener el historial de commits.
-  
+
   > **Nota:** Si eliges la opción del ZIP, asegúrate de que el archivo incluya todo el historial de Git para poder evaluar la evolución del desarrollo.
 
-- **README.md:**  
+- **README.md:**
+
   - Incluir instrucciones detalladas para levantar la aplicación (back-end y front-end si aplica).
   - Explicar cómo ejecutar las pruebas.
   - Documentar la configuración de variables de entorno y otra información relevante.

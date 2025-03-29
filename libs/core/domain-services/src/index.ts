@@ -1,1 +1,5 @@
-export * from './lib/domain-services.module';
+// Repositories
+export * from './lib/repositories/quota.repository';
+
+// Services
+export * from './lib/services/quota.service';

@@ -1,1 +1,1 @@
-export * from './lib/nest.module';
+export * from './lib/filters/http-exception.filter';
