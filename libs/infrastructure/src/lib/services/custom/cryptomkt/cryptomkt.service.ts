@@ -1,19 +1,18 @@
+import { CryptomktService } from '@monorepo/core-domain-services';
 import { HttpService } from '@nestjs/axios';
 import { plainToInstance } from 'class-transformer';
+import { lastValueFrom } from 'rxjs';
+import { CRYPTOMKT_CONSTANTS } from '../../../constants/cryptomkt.constants';
 import { CryptomktResponse } from '../../../models/responses/cryptomkt.models';
 
-export class CryptomktService {
-  constructor() {
-    /**/
-  }
+export class CryptomktServiceImpl implements CryptomktService {
+  constructor(private readonly httpService: HttpService) {}
 
-  public async get(from: string, to: string) {
-    // FIXME: Change this to constant and create a configService
-    const url = `https://api.exchange.cryptomkt.com/api/3/public/price/rate?from=${from}&to=${to}`;
+  public async get(from: string, to: string): Promise<CryptomktResponse> {
+    const url = `${CRYPTOMKT_CONSTANTS.BASE_URL}?from=${from}&to=${to}`;
 
     try {
-      const http = new HttpService();
-      const response = await http.get(url).toPromise();
+      const response = await lastValueFrom(this.httpService.get(url));
 
       const data = response?.data;
       const key = Object.keys(data)[0];

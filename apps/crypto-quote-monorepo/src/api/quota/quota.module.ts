@@ -1,28 +1,28 @@
-import { QuotaRepository, QuotaService } from '@monorepo/core-domain-services';
+import { CryptomktService, QuotaRepository, QuotaService } from '@monorepo/core-domain-services';
 import { CreateQuotaUseCase, GetQuotaUseCase } from '@monorepo/core-use-cases';
-import { CryptomktService, PrismaQuotaRepository, QuotaServiceImpl } from '@monorepo/infrastructure';
+import { CryptomktServiceImpl, PrismaQuotaRepository, QuotaServiceImpl } from '@monorepo/infrastructure';
+import { HttpModule, HttpService } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { QuotaController } from './quota.controller';
 
-const prismaClientProvider = {
-  provide: PrismaClient,
-  useFactory: () => {
-    return new PrismaClient();
-  },
-};
-
 @Module({
-  imports: [],
+  imports: [
+    HttpModule.register({
+      timeout: 5000,
+      maxRedirects: 5,
+    }),
+  ],
   controllers: [QuotaController],
   providers: [
-    prismaClientProvider,
+    {
+      provide: PrismaClient,
+      useFactory: () => new PrismaClient(),
+    },
     {
       provide: CryptomktService,
-      useFactory: () => {
-        return new CryptomktService();
-      },
-      inject: [],
+      useFactory: (httpService: HttpService) => new CryptomktServiceImpl(httpService),
+      inject: [HttpService],
     },
     {
       provide: QuotaRepository,
@@ -36,16 +36,12 @@ const prismaClientProvider = {
     },
     {
       provide: CreateQuotaUseCase,
-      useFactory: (cryptomktService: CryptomktService, quotaService: QuotaService) => {
-        return new CreateQuotaUseCase(cryptomktService, quotaService);
-      },
+      useFactory: (cryptomktService: CryptomktService, quotaService: QuotaService) => new CreateQuotaUseCase(cryptomktService, quotaService),
       inject: [CryptomktService, QuotaService],
     },
     {
       provide: GetQuotaUseCase,
-      useFactory: (quotaService: QuotaService) => {
-        return new GetQuotaUseCase(quotaService);
-      },
+      useFactory: (quotaService: QuotaService) => new GetQuotaUseCase(quotaService),
       inject: [QuotaService],
     },
   ],

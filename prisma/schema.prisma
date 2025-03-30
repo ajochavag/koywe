@@ -23,3 +23,9 @@ model Quota {
   timestamp       DateTime @default(now())
   expiresAt       DateTime
 }
+
+model User {
+  id       String @id @default(uuid())
+  email    String @unique
+  password String
+}

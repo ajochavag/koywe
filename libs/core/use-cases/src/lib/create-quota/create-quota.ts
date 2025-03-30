@@ -1,6 +1,5 @@
 import { Quota } from '@monorepo/core-domain';
-import { QuotaService } from '@monorepo/core-domain-services';
-import { CryptomktService } from '@monorepo/infrastructure';
+import { CryptomktService, QuotaService } from '@monorepo/core-domain-services';
 import { v4 as uuidv4 } from 'uuid';
 
 export class CreateQuotaUseCase {
