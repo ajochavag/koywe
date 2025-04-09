@@ -6,13 +6,13 @@ import { QuoteRepository } from './quote.repository';
 @Controller('quote')
 export class QuoteController {
   constructor(
-    private readonly quoteFacade: QuoteService,
+    private readonly quoteService: QuoteService,
     private readonly quoteRepo: QuoteRepository
   ) {}
 
   @Post()
   async createQuote(@Body() dto: QuoteDto) {
-    return this.quoteFacade.createQuote(dto);
+    return this.quoteService.createQuote(dto);
   }
 
   @Get(':id')
