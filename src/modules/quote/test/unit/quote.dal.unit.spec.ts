@@ -1,5 +1,5 @@
 /**
-** @descripción Pruebas unitarias para la capa de acceso a datos (DAL), que se comunica con la API externa de tipo de cambio.
+** Pruebas unitarias para la capa de acceso a datos de la DB y de API.
 * Se utiliza axios-mock-adapter para simular el comportamiento de la API.
 * Patrón de test AAA (Arrange, Act, Assert/ Preparar, Actuar, Verificar).
 * 
