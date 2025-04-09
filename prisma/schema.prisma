@@ -1,0 +1,20 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Quote {
+  id              String   @id @default(uuid())
+  amount          Float
+  from            String
+  to              String
+  rate            Float
+  convertedAmount Float
+  timestamp       DateTime @default(now())
+  expiresAt       DateTime
+}
+
