@@ -1,11 +1,22 @@
-  /**
-   * Pruebas unitarias para la capa de lógica de negocios (BLL) y de acceso a datos (DAL)
-   * Patrón de test AAA (Arrange, Act, Assert/ Preparar, Actuar, Verificar)
-   * relacionadas con cotizaciones de moneda.
-   *
-   * Estas pruebas validan:
-   * - El cálculo correcto de una cotización (QuoteBLL).
-   */
+/**
+ * Pruebas unitarias de la lógica de negocio para cotizaciones (QuoteBLL).
+ *
+ * Este archivo se enfoca en testear el cálculo de cotizaciones mediante la clase `QuoteBLL`,
+ * asegurando que la lógica de conversión entre monedas funcione correctamente.
+ *
+ * Patrón utilizado: AAA (Arrange, Act, Assert / Preparar, Actuar, Verificar)
+ *
+ * Objetivos de estas pruebas:
+ * - Validar que la función `calculateQuote`:
+ *   - Genere correctamente todos los campos esperados.
+ *   - Calcule correctamente el monto convertido (`convertedAmount`).
+ *   - Asigne una fecha de expiración posterior al timestamp de creación.
+ *
+ * Consideraciones:
+ * - Se usa Jest como framework de pruebas.
+ * - Se mockea el paquete `uuid` para evitar resultados aleatorios en los IDs durante las pruebas.
+ * - Las pruebas se enfocan en la lógica pura, sin dependencias externas ni conexión a bases de datos.
+ */
 
   import { Test, TestingModule } from '@nestjs/testing';
   import { QuoteBLL } from '../../quote.bll';
@@ -25,14 +36,14 @@
     });
   
     it('debería calcular correctamente una cotización', () => {
-      // Arrange: Preparamos los datos de entrada
+      // Arrange
       const dto: QuoteDto = { amount: 1000, from: 'ARS', to: 'ETH' };
       const rate = 0.0000023;
   
-      // Act: Ejecutamos el método que queremos probar
+      // Act
       const result = quoteBLL.calculateQuote(dto, rate);
   
-      // Assert: Verificamos que el resultado sea correcto
+      // Assert
       expect(result).toHaveProperty('id');
       expect(result.amount).toBe(dto.amount);
       expect(result.from).toBe(dto.from);
