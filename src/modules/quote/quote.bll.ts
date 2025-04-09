@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid';
 export class QuoteBLL {
   calculateQuote(dto: QuoteDto, rate: number) {
     const now = new Date();
-    const expiresAt = new Date(now.getTime() + 5 * 60 * 1000); // +5 mins
+    const expiresAt = new Date(now.getTime() + 20 * 1000); // 20segundos
 
     return {
       id: uuid(),
@@ -15,8 +15,8 @@ export class QuoteBLL {
       amount: dto.amount,
       rate,
       convertedAmount: +(dto.amount * rate).toFixed(6),
-      timestamp: now.toISOString(),
-      expiresAt: expiresAt.toISOString(),
+      timestamp: now,
+      expiresAt: expiresAt,
     };
   }
 }
