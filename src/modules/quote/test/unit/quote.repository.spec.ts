@@ -1,3 +1,24 @@
+/**
+ * Pruebas unitarias para la capa de acceso a datos (QuoteRepository) que interactúa con Prisma.
+ *
+ * Estas pruebas validan el comportamiento esperado de las funciones `getQuoteById` y `createQuote`,
+ * encargadas de consultar y almacenar cotizaciones en la base de datos.
+ *
+ * Funcionalidades testeadas:
+ * - `getQuoteById`:
+ *    - Devuelve una cotización válida si existe y no ha expirado.
+ *    - Lanza `NotFoundException` si no se encuentra la cotización.
+ *    - Lanza excepción si la cotización ha expirado.
+ *
+ * - `createQuote`:
+ *    - Crea correctamente una cotización utilizando Prisma.
+ *
+ * Consideraciones:
+ * - Se utiliza `jest.fn()` para simular el comportamiento del cliente Prisma (`PrismaDAL`).
+ * - Se evita el acceso real a la base de datos mediante inyección de dependencias mockeadas.
+ * - Las pruebas son atómicas y limpian los mocks tras cada ejecución (`jest.clearAllMocks`).
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { QuoteRepository } from '../../quote.repository';
 import { PrismaDAL } from '../../../prisma/prisma.dal';
