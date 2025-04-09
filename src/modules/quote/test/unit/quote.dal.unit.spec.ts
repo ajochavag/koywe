@@ -4,24 +4,26 @@
 * Patrón de test AAA (Arrange, Act, Assert/ Preparar, Actuar, Verificar).
 * 
 * Estas pruebas validan:
-* - La obtención de la tasa de cambio desde una API externa (QuoteDAL).
+* - La obtención de la tasa de cambio desde una API externa (quoteRepository).
 */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { QuoteDAL } from '../../quote.dal';
+import { QuoteRepository } from '../../quote.repository';
+import { QuoteProvider } from '../../quote.provider';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
-describe('QuoteDAL', () => {
-  let quoteDAL: QuoteDAL;
+describe('QuoteRepository', () => {
+  let quoteRepository: QuoteRepository;
   let mock: MockAdapter;
+  let quoteProvider: QuoteProvider;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [QuoteDAL],
+      providers: [QuoteRepository],
     }).compile();
 
-    quoteDAL = module.get<QuoteDAL>(QuoteDAL);
+    quoteRepository = module.get<QuoteRepository>(QuoteRepository);
     mock = new MockAdapter(axios);
   });
 
@@ -40,7 +42,7 @@ describe('QuoteDAL', () => {
     }).reply(200, { rate });
 
     // Act
-    const result = await quoteDAL.getExchangeRate(from, to);
+    const result = await quoteProvider.getExchangeRate(from, to);
 
     // Assert
     expect(result).toBe(rate);
@@ -56,7 +58,7 @@ describe('QuoteDAL', () => {
     }).networkError();
 
     // Act
-    const result = await quoteDAL.getExchangeRate(from, to);
+    const result = await quoteProvider.getExchangeRate(from, to);
 
     // Assert
     expect(result).toBe(0.0000023); // Valor por defecto en caso de error
