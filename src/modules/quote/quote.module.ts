@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { QuoteController } from './quote.controller';
-import { QuoteFacade } from './quote.facade';
+import { QuoteService } from './quote.service';
 import { QuoteBLL } from './quote.bll';
-import { QuoteDAL } from './quote.dal';
+import { QuoteRepository } from './quote.repository';
 
 @Module({
   controllers: [QuoteController],
-  providers: [QuoteFacade, QuoteBLL, QuoteDAL],
+  providers: [QuoteService, QuoteBLL, QuoteRepository],
 })
 export class QuoteModule {}
