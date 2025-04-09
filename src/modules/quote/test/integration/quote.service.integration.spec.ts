@@ -1,3 +1,22 @@
+/**
+ * Pruebas unitarias para `QuoteService`, encargado de la lógica orquestadora
+ *
+ * El servicio coordina tres componentes clave:
+ * - `QuoteProvider`: Proveedor externo de tasas de cambio.
+ * - `QuoteBLL`: Lógica de negocio para cálculo de cotizaciones.
+ * - `QuoteRepository`: Persistencia de datos en base de datos.
+ *
+ *  En este archivo se valida principalmente:
+ * - El flujo completo de creación de una cotización (`createQuote`), asegurando
+ *   que cada dependencia sea invocada correctamente y el resultado final sea consistente.
+ *
+ *  Consideraciones futuras:
+ * - Este archivo crecerá conforme se agreguen nuevas funcionalidades al servicio (`QuoteService`),
+ *   por ejemplo: validaciones adicionales, lógica de cancelación, obtención por ID, etc.
+ * - Mantener coherencia en los mocks y en la validación de flujos para cada nueva función.
+ *
+ */
+
 import { QuoteService } from '../../quote.service';
 import { QuoteProvider } from '../../quote.provider';
 import { QuoteBLL } from '../../quote.bll';
