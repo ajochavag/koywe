@@ -1,6 +1,22 @@
 /**
- * @descripción Pruebas de integración que validan el flujo completo entre el controlador y las capas BLL y DAL.
+ * Pruebas de integración de `QuoteController`.
+ *
+ * Estas pruebas validan el flujo completo entre el controlador y las capas de negocio (BLL) y persistencia (DAL),
+ * asegurando que la aplicación se comporte correctamente ante solicitudes reales HTTP.
+ *
+ *  Qué se está validando actualmente:
+ * - El endpoint `POST /quote` retorna una cotización válida cuando se le envía un cuerpo de solicitud correcto.
+ *
+ *  Estructura de pruebas:
+ * - Se utiliza `supertest` para simular peticiones HTTP reales contra la aplicación NestJS en ejecución.
+ * - El módulo `QuoteModule` es cargado como dependencia, incluyendo todas sus capas internas.
+ *
+ *  Consideraciones futuras:
+ * - Este archivo debe ampliarse para incluir más pruebas de integración a medida que crezcan los endpoints,
+ * - Se recomienda mantener una separación clara entre pruebas unitarias (capa a capa) y pruebas de integración (flujo completo).
+ *
  */
+
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
