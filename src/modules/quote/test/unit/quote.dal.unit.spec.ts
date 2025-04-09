@@ -10,6 +10,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { QuoteRepository } from '../../quote.repository';
 import { QuoteProvider } from '../../quote.provider';
+import { PrismaDAL } from '../../../prisma/prisma.dal';
+import { ConfigService } from '@nestjs/config'; 
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
@@ -20,10 +22,19 @@ describe('QuoteRepository', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [QuoteRepository],
+      providers: [
+        QuoteRepository,
+        QuoteProvider,
+        ConfigService,
+        {
+          provide: PrismaDAL,
+          useValue: {},
+        },
+      ],
     }).compile();
-
+  
     quoteRepository = module.get<QuoteRepository>(QuoteRepository);
+    quoteProvider = module.get<QuoteProvider>(QuoteProvider);
     mock = new MockAdapter(axios);
   });
 
