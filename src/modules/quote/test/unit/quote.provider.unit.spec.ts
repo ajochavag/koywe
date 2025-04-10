@@ -42,36 +42,36 @@ describe('QuoteRepository', () => {
     mock.restore(); // Limpiar mocks después de cada prueba
   });
 
-  it('debería obtener la tasa de cambio desde la API externa', async () => {
+  it('debería obtener el precio unitario desde la API externa', async () => {
     // Arrange
     const from = 'ARS';
     const to = 'ETH';
-    const rate = 0.0000023;
-
-    mock.onGet(`https://api.exchange.cryptomkt.com/api/3/public/price/rate`, {
+    const price = '0.000058';
+    const expectedRate = parseFloat(price);
+  
+    mock.onGet('https://api.exchange.cryptomkt.com/api/3/public/price/rate', {
       params: { from: to, to: from },
-    }).reply(200, { rate });
-
+    }).reply(200, {
+      [to]: {
+        currency: from,
+        price: price,
+        timestamp: '2024-04-02T17:52:36.731Z',
+      },
+    });
+  
     // Act
     const result = await quoteProvider.getExchangeRate(from, to);
-
+  
     // Assert
-    expect(result).toBe(rate);
-  });
+    expect(result).toBeCloseTo(expectedRate, 7);
+  })
 
-  it('debería manejar errores y devolver una tasa por defecto', async () => {
-    // Arrange
+  it('debería lanzar un error si la API externa falla', async () => {
     const from = 'ARS';
     const to = 'ETH';
-
-    mock.onGet(`https://api.exchange.cryptomkt.com/api/3/public/price/rate`, {
-      params: { from: to, to: from },
-    }).networkError();
-
-    // Act
-    const result = await quoteProvider.getExchangeRate(from, to);
-
-    // Assert
-    expect(result).toBe(0.0000023); // Valor por defecto en caso de error
+  
+    mock.onGet(/price\/rate/).networkError();
+  
+    await expect(quoteProvider.getExchangeRate(from, to)).rejects.toThrow();
   });
 });
