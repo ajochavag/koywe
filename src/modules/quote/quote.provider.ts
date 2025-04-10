@@ -41,7 +41,8 @@ export class QuoteProvider {
 
       return parseFloat(getPrice);
     } catch (err) {
-      console.error("Hubo un error al consultar a la API"); 
+      console.error("Hubo un error al consultar a la API");
+      throw err;
     }
   }
 }
