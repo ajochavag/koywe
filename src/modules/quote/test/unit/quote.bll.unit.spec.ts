@@ -21,6 +21,7 @@
   import { Test, TestingModule } from '@nestjs/testing';
   import { QuoteBLL } from '../../quote.bll';
   import { QuoteDto } from '../../dto/quote.dto';
+  import { Decimal } from 'decimal.js';
   
   jest.mock('uuid');
   
@@ -38,18 +39,23 @@
     it('debería calcular correctamente una cotización', () => {
       // Arrange
       const dto: QuoteDto = { amount: 1000, from: 'ARS', to: 'ETH' };
-      const rate = 0.0000023;
+      const priceProvider = 0.0000023;
+  
+      const amount = new Decimal(dto.amount);
+      const price = new Decimal(priceProvider);
+      const expectedRate = new Decimal(1).div(price);
+      const expectedConvertedAmount = amount.mul(expectedRate).toDecimalPlaces(7);
   
       // Act
-      const result = quoteBLL.calculateQuote(dto, rate);
+      const result = quoteBLL.calculateQuote(dto, priceProvider);
   
       // Assert
       expect(result).toHaveProperty('id');
       expect(result.amount).toBe(dto.amount);
       expect(result.from).toBe(dto.from);
       expect(result.to).toBe(dto.to);
-      expect(result.rate).toBe(rate);
-      expect(result.convertedAmount).toBeCloseTo(dto.amount * rate, 6);
+      expect(result.rate).toBeCloseTo(expectedRate.toNumber(), 7);
+      expect(result.convertedAmount).toBeCloseTo(expectedConvertedAmount.toNumber(), 7);
       expect(new Date(result.expiresAt).getTime()).toBeGreaterThan(new Date(result.timestamp).getTime());
     });
   });
