@@ -10,26 +10,41 @@
  *  Estructura de pruebas:
  * - Se utiliza `supertest` para simular peticiones HTTP reales contra la aplicación NestJS en ejecución.
  * - El módulo `QuoteModule` es cargado como dependencia, incluyendo todas sus capas internas.
+ * - Se mockea el `JwtAuthGuard` mediante `.overrideGuard()` para evitar la necesidad de autenticación real.
  *
  *  Consideraciones futuras:
  * - Este archivo debe ampliarse para incluir más pruebas de integración a medida que crezcan los endpoints,
  * - Se recomienda mantener una separación clara entre pruebas unitarias (capa a capa) y pruebas de integración (flujo completo).
- *
+ *  
+ *  NOTAS:
+ * - Aunque estamos reemplazando el JwtAuthGuard con un mock (para evitar la lógica de autenticación), NestJS igualmente necesita registrar la estrategia jwt de passport, que no la registra el guardia, sino el AuthModule.
  */
 
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, CanActivate, ExecutionContext } from '@nestjs/common';
 import * as request from 'supertest';
 import { QuoteModule } from '../../quote.module';
+import { JwtAuthGuard } from '../../../../authentication/guard/jwt-auth.guard'; 
+import { AuthModule } from '../../../../authentication/auth.module';
+
+
+class MockAuthGuard implements CanActivate {
+  canActivate(context: ExecutionContext): boolean {
+    return true; // Siempre permite el acceso
+  }
+}
 
 describe('QuoteController (integración)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [QuoteModule],
-    }).compile();
+      imports: [QuoteModule, AuthModule],
+    })
+    .overrideGuard(JwtAuthGuard)// Se reemplaza el JwtAuthGuard para que no requiera autenticación real durante las pruebas
+    .useClass(MockAuthGuard)
+    .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
