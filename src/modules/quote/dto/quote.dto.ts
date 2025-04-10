@@ -5,10 +5,8 @@ export class QuoteDto {
   amount: number;
 
   @IsString()
-  @IsIn(['ARS', 'CLP', 'MXN', 'USDC', 'BTC', 'ETH'])
   from: string;
 
   @IsString()
-  @IsIn(['ARS', 'CLP', 'MXN', 'USDC', 'BTC', 'ETH'])
   to: string;
 }
