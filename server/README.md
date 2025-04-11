@@ -64,6 +64,12 @@ npm install --force
 &nbsp;
 ## Inicia prisma
 Inicia el cliente de la DB para poder continuar. (Es importante que tengas el archivo .env dentro de la raiz del server)
+Nota:
+ - Si en algun momento tienes problemas con que prisma no exporta PrismaClient:
+ - Elimina la carpeta de node_modules y package-lock.json
+ - Cierra el editor de código.
+ - Vuelva a seguir los pasos para iniciar Prisma.
+
 &nbsp;
 
 ```bash
