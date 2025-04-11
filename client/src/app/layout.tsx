@@ -1,6 +1,8 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Kanit} from 'next/font/google'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const kanitFonts = Kanit({ weight: ['400', '600', '700'], subsets: ['latin'] })
 
@@ -16,7 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className={kanitFonts.className}>{children}</body>
+      <body className={kanitFonts.className}>{children}
+      <ToastContainer />
+      </body>
     </html>
   )
 }
