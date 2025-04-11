@@ -42,7 +42,7 @@ import { v4 as uuid } from 'uuid';
 export class QuoteBLL {
   calculateQuote(dto: QuoteDto, priceProvider: number) {
     const now = new Date();
-    const expiresAt = new Date(now.getTime() + 20 * 1000); // 20segundos
+    const expiresAt = new Date(now.getTime() + 5 * 60 * 1000); // Se cambio a 5 minutos para probar el front
 
     const amount = new Decimal(dto.amount);
     const price = new Decimal(priceProvider);
