@@ -18,3 +18,11 @@ model Quote {
   expiresAt       DateTime
 }
 
+model User {
+  id       String   @id @default(uuid())
+  username String   @unique
+  email    String   @unique
+  password String
+  createdAt DateTime @default(now())
+}
+
