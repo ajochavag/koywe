@@ -1,4 +1,12 @@
-# Server
+# Server - Koywe API
+
+Servidor backend construido con NestJS, Prisma y PostgreSQL. Esta API permite gestionar conversiones de moneda utilizando datos en tiempo real de CryptoMKT. Pensado con arquitectura modular escalable para facilitar el mantenimiento y la colaboración en equipo.
+
+[🤖 Integración de IA](./docs/integracionIA.md)
+
+---
+&nbsp;
+
 
 ## (Requisito) Crea el archivo .env
 Crear archivo .env en la raíz del proyecto NEST.js y copia dentro lo siguiente:
@@ -45,7 +53,8 @@ JWT_EXPIRES_IN=1h
 ```
 &nbsp;
 
-## Iniciando
+# 1. DEPENDENCIAS
+## iniciando
 Asegurate de instalar las dependencias, y asegurarte de que no tengas errores de compatibilidad.
 &nbsp;
 
@@ -62,27 +71,17 @@ npm install --legacy-peer-deps
 npm install --force
 ```
 &nbsp;
-## Inicia prisma
-Inicia el cliente de la DB para poder continuar. (Es importante que tengas el archivo .env dentro de la raiz del server)
-&nbsp;
-Nota:
- - Si en algun momento tienes problemas con que prisma no exporta PrismaClient:
- - Elimina la carpeta de node_modules y package-lock.json
- - Cierra el editor de código.
- - Vuelva a seguir los pasos para iniciar Prisma.
+
+# 2. BASE DE DATOS
+## Levanta la base de datos y el cliente Prisma
+Revisa el enlace con la información de la DB y por qué decidí utilizarla.
+
+- [Guía de instalación](./docs/opcionDeDB.md)
 
 &nbsp;
 
-```bash
-cd server
-cd prisma
-
-# Ejecuta el comando para generar el cliente de Prisma
-npx prisma generate
-# Te devolvera un mensaje de éxito.
-```
-
-## Inicia el server
+# 3. SERVER
+## Inicia el servidor
 Una vez que hayas hecho todos los pasos, ejecuta el comando para inciar el server, deberia aparecerte un mensaje que inicio.
 &nbsp;
 
@@ -93,14 +92,6 @@ npm run start:dev
 ```
 &nbsp;
 
-## ¿Por qué PostgreSQL?
-Porque pense la API a grande escala y no me quede solo con la parte de "challenge". Por lo tanto, para una API de tipo exchange es mejor utilizar una estructura relacional como **PostgreSQL** que permite definir relaciones claras entre entidades (usuarios, transacciones, etc.).
-
-
-## ¿Por qué Prisma?
-Se eligió **Prisma** como ORM (Object Relational Mapping) por su facilidad de uso y sy integración con **TypeScript**.
-
-&nbsp;
 
 # Arquitectura Modular basada en Dominios (Feature-Based Modular Architecture)
 ## ⚡¿Por qué utiliza a Modular basada en Dominios?
@@ -145,4 +136,10 @@ conversion/
 
 ✅ Reutilización: el bll se puede usar desde otras capas o servicios si es necesario.
 
+---
 
+&nbsp;
+
+## 👥 Autor
+
+- [Agus Albarracín](https://github.com/Agus-Albarracin) - Full Stack developer
