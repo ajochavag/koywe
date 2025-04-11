@@ -88,43 +88,45 @@ export default function Home() {
               Crear cotización
             </h2>
 
-            <div className="space-y-3">
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="Monto"
-                className="w-full p-2 rounded-lg border text-black focus:outline-none"
-              />
-
+          <div className="space-y-3">
+            <input
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="Monto"
+              className="w-full p-2 rounded-lg border text-black focus:outline-none"
+            />
+          
+            <div className="flex gap-3">
               <input
                 type="text"
                 value={from}
-                onChange={(e) => setFrom(e.target.value)}
+                onChange={(e) => setFrom(e.target.value.trim())}
                 placeholder="Desde (e.g. USD)"
-                className="w-full p-2 rounded-lg border text-black focus:outline-none"
+                className="w-1/2 p-2 rounded-lg border text-black focus:outline-none"
               />
-
+          
               <input
                 type="text"
                 value={to}
-                onChange={(e) => setTo(e.target.value)}
+                onChange={(e) => setTo(e.target.value.trim())}
                 placeholder="Hacia (e.g. CLP)"
-                className="w-full p-2 rounded-lg border text-black focus:outline-none"
+                className="w-1/2 p-2 rounded-lg border text-black focus:outline-none"
               />
-
-              <button
-                type="submit"
-                className="w-full bg-[var(--color-principal)] hover:bg-emerald-900 text-white py-2 rounded-lg transition"
-              >
-                Cotizar
-              </button>
             </div>
+          
+            <button
+              type="submit"
+              className="w-full bg-[var(--color-principal)] hover:bg-emerald-900 text-white py-2 rounded-lg transition"
+            >
+              Cotizar
+            </button>
+          </div>
 
             {quoteResult && (
               <div className="mt-4 text-sm space-y-1 text-black">
                 <p><strong>ID:</strong> {quoteResult.id}</p>
-                <p><strong>Tasa:</strong> {quoteResult.rate}</p>
+                <p><strong>Tasa:</strong> {Number(quoteResult.rate).toFixed(7)}</p>
                 <p><strong>Total:</strong> {quoteResult.convertedAmount}</p>
               </div>
             )}
@@ -159,10 +161,9 @@ export default function Home() {
             {quoteDetails && (
               <div className="mt-4 text-sm text-black space-y-1">
                 <p><strong>ID:</strong> {quoteDetails.id}</p>
-                <p><strong>Monto:</strong> {quoteDetails.amount}</p>
-                <p><strong>De:</strong> {quoteDetails.from}</p>
-                <p><strong>A:</strong> {quoteDetails.to}</p>
-                <p><strong>Tasa:</strong> {quoteDetails.rate}</p>
+                <p><strong>Monto: $</strong> {quoteDetails.amount}</p>
+                <p><strong>De:</strong> {quoteDetails.from} <strong>A:</strong> {quoteDetails.to}</p>
+                <p><strong>Tasa:</strong>{Number(quoteDetails.rate).toFixed(7)}</p>
                 <p><strong>Total:</strong> {quoteDetails.convertedAmount}</p>
                 <p><strong>Expira:</strong> {new Date(quoteDetails.expiresAt).toLocaleString()}</p>
               </div>
