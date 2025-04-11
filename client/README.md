@@ -6,7 +6,7 @@ Nota: Si el puerto 8000 ya lo tienes en uso, cambialo por un puerto libre, recue
 
 ```bash
 # archivo .env.local
-NEXT_PUBLIC_API_URL=http://localhost:8000/
+NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 NEXT_PUBLIC_API_URL es obligatorio para exponer la variable al cliente (ya que estás usándola en código del cliente: use client).
 
