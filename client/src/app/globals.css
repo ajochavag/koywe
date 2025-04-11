@@ -14,17 +14,17 @@ body {
   --color-secundario: #C8FF1E;
   --color-opt1: #F0DCFE;
   --color-opt2: #9AE6B4;
+  --color-black: #000;
 }
 
 ::selection {
   background: #006252;
 }
 
-.degradedBlue {
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  padding: 5px 0;
+.bg-login {
+  background-image: url('/fondo.jpg');
+  background-size: cover;
+  background-position: center;
 }
 
 .swiper-pagination-bullet {
