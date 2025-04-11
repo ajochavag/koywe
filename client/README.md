@@ -1,4 +1,5 @@
  Se creo una mini web para probar los endpoints del server.
+ [info sobre IA](docs/integracionIA.md)
 
 ## (Requisito) Crea el archivo .env.local
 Crear archivo .env.local en la raíz del proyecto Next.js y copia dentro lo siguiente: 
@@ -33,3 +34,9 @@ Contiene una interfaz sencilla y completa para probar la autenticación y creaci
 Contiene una interfaz sencilla en donde se puede:
  - Crear cotización (al crear la cotización, como respuesta se obtiene `id`, `tasa` y `total`).
  - Consultar a través de id las cotizaciones realizadas (al buscar una cotización vas a obtener: `id`, `monto`, `from`, `to`, `tasa`, `total` y `expiración`).
+
+ &nbsp;
+
+## 👥 Autor
+
+- [Agus Albarracín](https://github.com/Agus-Albarracin) - Full Stack developer
