@@ -32,6 +32,8 @@ import * as request from 'supertest';
 import { QuoteModule } from '../../quote.module';
 import { JwtAuthGuard } from '../../../../authentication/guard/jwt-auth.guard';
 import { AuthModule } from '../../../../authentication/auth.module';
+import * as dotenv from 'dotenv';
+dotenv.config({ path: '.env' });
 
 class MockAuthGuard implements CanActivate {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

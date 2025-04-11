@@ -25,6 +25,8 @@ import { PrismaDAL } from '../../../prisma/prisma.dal';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import * as dotenv from 'dotenv';
+dotenv.config({ path: '.env' });
 
 describe('QuoteRepository', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
