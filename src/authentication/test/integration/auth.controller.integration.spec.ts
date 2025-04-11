@@ -1,3 +1,22 @@
+/**
+ * Este archivo contiene las pruebas de integración para el controlador AuthController.
+ *
+ * En estas pruebas, se utiliza el patrón de inyección de dependencias de NestJS para
+ * garantizar que el controlador y el servicio AuthService estén correctamente integrados.
+ * Aunque el servicio AuthService está mockeado, su inyección sigue siendo esencial
+ * para simular el comportamiento real del sistema y verificar las interacciones correctas
+ * entre el controlador y el servicio.
+ *
+ * Mantener la inyección del servicio mockeado asegura que las pruebas reflejen de manera
+ * adecuada cómo interactúan estos componentes en un entorno de producción.
+ *
+ * NOTAS:
+ * - No eliminar la línea de inyección de `userService`**, ya que es fundamental para la validez y cobertura
+ *   de las pruebas unitarias.
+ * - La línea de `eslint-disable-next-line @typescript-eslint/no-unused-vars` indica que esto no es un error
+ *   y es un patrón común en las pruebas unitarias cuando la variable no es utilizada directamente, pero su
+ *   presencia asegura que las dependencias están correctamente definidas.
+ */
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from '../../auth.controller';
 import { AuthService } from '../../auth.service';
@@ -5,6 +24,7 @@ import { UnauthorizedException } from '@nestjs/common';
 
 describe('AuthController', () => {
   let authController: AuthController;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let authService: AuthService;
 
   const mockAuthService = {

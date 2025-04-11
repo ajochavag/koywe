@@ -17,8 +17,14 @@
  * - Se recomienda mantener una separación clara entre pruebas unitarias (capa a capa) y pruebas de integración (flujo completo).
  *  
  *  NOTAS:
- * - Aunque estamos reemplazando el JwtAuthGuard con un mock (para evitar la lógica de autenticación), NestJS igualmente necesita registrar la estrategia jwt de passport, que no la registra el guardia, sino el AuthModule.
- */
+ * - Aunque estamos reemplazando el JwtAuthGuard con un mock (para evitar la lógica de autenticación)
+ *  NestJS igualmente necesita registrar la estrategia jwt de passport, que no la registra el guardia, sino el AuthModule.
+ * - La línea `// eslint-disable-next-line @typescript-eslint/no-unused-vars` es necesaria para desactivar temporalmente
+ *   la regla `@typescript-eslint/no-unused-vars`, ya que el parámetro `context` en el método `canActivate` no es utilizado
+ *   en esta implementación de prueba. Esta desactivación se hace para evitar que ESLint arroje un error innecesario
+ *   por un parámetro no utilizado. Este comportamiento es esperado en este caso ya que el propósito del mock es
+ *   simular una autenticación sin lógica real. 
+*/
 
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -30,6 +36,7 @@ import { AuthModule } from '../../../../authentication/auth.module';
 
 
 class MockAuthGuard implements CanActivate {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   canActivate(context: ExecutionContext): boolean {
     return true; // Siempre permite el acceso
   }

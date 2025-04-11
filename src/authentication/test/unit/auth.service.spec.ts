@@ -3,15 +3,22 @@
  *
  * Objetivo:
  * Verificar las funcionalidades de inicio de sesión (`signin`) y registro (`signup`) del servicio de autenticación.
- * Estas pruebas aseguran que el flujo de autenticación, desde la verificación del usuario hasta la generación del token JWT, funcione correctamente.
+ * Estas pruebas aseguran que el flujo de autenticación, desde la verificación del usuario hasta la
+ * generación del token JWT, funcione correctamente.
  *
  * Dependencias Mockeadas:
- * - `bcrypt`: Se mockean las funciones `hash` y `compare` para simular el comportamiento real de encriptación y verificación de contraseñas.
+ * - `bcrypt`: Se mockean las funciones `hash` y `compare` para simular el comportamiento real de encriptación
+ *    y verificación de contraseñas.
  * - `UserService`: Se mockean las funciones `findByUsername` y `create` para evitar interacciones reales con la base de datos.
  * - `JwtService`: Se mockea la función `sign` para simular la generación de un token JWT.
  * 
  * NOTAS:
- * - Prueba de seguridad: Aunque las pruebas aseguran que el sistema responde correctamente en distintos escenarios de autenticación, no están diseñadas para validar la seguridad real de las contraseñas ni del token generado.
+ * - Prueba de seguridad: Aunque las pruebas aseguran que el sistema responde correctamente en distintos
+ *  escenarios de autenticación, no están diseñadas para validar la seguridad real de las contraseñas ni del token generado.
+ * - La razón para deshabilitar la regla `@typescript-eslint/no-explicit-any` en esta línea en particular es
+ *  porque estamos utilizando un mock de una función externa (bcrypt.compare) que no tiene un tipo explícito en su firma.
+ *  En este caso, el uso de any es una solución práctica y necesaria para poder simular el comportamiento
+ *  de la función sin tener que redefinir completamente los tipos de la librería externa bcrypt.
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -69,6 +76,7 @@ describe('AuthService', () => {
       // Usuario mockeado con contraseña incorrecta
       const user = { id: 1, username: 'user', password: 'hashedPass', email: 'a@a.com' };
       mockUserService.findByUsername.mockResolvedValue(user);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       jest.spyOn(bcrypt, 'compare' as any).mockResolvedValue(false); // Simulamos que la contraseña no es correcta
 
       // Se espera que se lance una excepción UnauthorizedException

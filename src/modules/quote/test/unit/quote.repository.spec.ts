@@ -17,6 +17,13 @@
  * - Se utiliza `jest.fn()` para simular el comportamiento del cliente Prisma (`PrismaDAL`).
  * - Se evita el acceso real a la base de datos mediante inyección de dependencias mockeadas.
  * - Las pruebas son atómicas y limpian los mocks tras cada ejecución (`jest.clearAllMocks`).
+ * 
+ *  NOTAS:
+ * - La línea `// eslint-disable-next-line @typescript-eslint/no-unused-vars` desactiva la regla
+ *  `@typescript-eslint/no-unused-vars` debido a que la variable `prismaDAL` no se utiliza directamente
+ *  en las pruebas, pero es parte de la configuración para inyectar el mock del cliente Prisma.
+ *  Esta desactivación se hace para evitar una advertencia innecesaria de ESLint sobre una
+ *  variable no utilizada, que en este caso no afecta al propósito de las pruebas.
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -26,6 +33,7 @@ import { NotFoundException } from '@nestjs/common';
 
 describe('QuoteRepository.getQuoteById', () => {
   let repository: QuoteRepository;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   let prismaDAL: PrismaDAL;
 
   const mockPrismaDAL = {

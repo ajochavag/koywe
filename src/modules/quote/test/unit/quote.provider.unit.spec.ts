@@ -5,6 +5,17 @@
 * 
 * Estas pruebas validan:
 * - La obtención de la tasa de cambio desde una API externa (quoteRepository).
+* 
+* NOTAS:
+* Línea ESLint (comentada)
+* La línea `// eslint-disable-next-line @typescript-eslint/no-unused-vars` es necesaria para desactivar
+* temporalmente la regla `@typescript-eslint/no-unused-vars`, ya que la variable `quoteRepository` no es utilizada
+* directamente en esta implementación de prueba. Esta desactivación se hace para evitar que ESLint arroje
+* una advertencia innecesaria por una variable no utilizada.
+* 
+* Este comportamiento es esperado en este caso, ya que la variable `quoteRepository` está siendo
+* probada indirectamente a través de `quoteProvider`. No es necesario acceder directamente
+* a `quoteRepository` en las pruebas, ya que la interacción entre ambos se evalúa dentro del servicio `quoteProvider`.
 */
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -16,6 +27,7 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
 describe('QuoteRepository', () => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   let quoteRepository: QuoteRepository;
   let mock: MockAdapter;
   let quoteProvider: QuoteProvider;

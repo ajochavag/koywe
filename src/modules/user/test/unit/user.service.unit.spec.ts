@@ -16,13 +16,22 @@
  * Consideraciones futuras:
  * - Agregar pruebas para manejo de errores (e.g. usuario no encontrado, errores de base de datos).
  * - Verificar validaciones previas en la capa de servicio si se implementan.
+ * 
+ *  **Línea ESLint comentada**
+ * La línea `// eslint-disable-next-line @typescript-eslint/no-unused-vars` desactiva la regla `@typescript-eslint/
+ * no-unused-vars` porque la constante `prisma` no se utiliza directamente en la clase `QuoteRepository`, ya que la clase 
+ * recibe una instancia de `PrismaDAL` como dependencia. La constante `prisma` solo se usa para definir el tipo `Quote`, y dado
+ * que su uso no afecta al flujo principal de la clase, se desactiva temporalmente la regla de ESLint para evitar una
+ * advertencia innecesaria sobre una variable no utilizada.
  */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from '../../user.service';
 import { PrismaDAL } from '../../../prisma/prisma.dal';
 
 describe('UserService', () => {
   let service: UserService;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   let prismaDAL: PrismaDAL;
 
   const mockPrismaDAL = {

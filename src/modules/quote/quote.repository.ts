@@ -6,13 +6,20 @@
  * - getQuoteById(id): Retorna una cotización si existe y no ha expirado. Lanza una excepción si no existe o si ha expirado.
  * - createQuote(quoteData): Crea una nueva cotización en la base de datos.
  *
- * Notas:
+ * NOTAS:
  * - Usa el decorador `@Injectable()` para ser inyectado como dependencia dentro del ecosistema de NestJS.
  * - Usa una definición de tipo `Quote` para tipado seguro basado en el resultado de `prisma.quote.findFirst`.
+ * La línea `// eslint-disable-next-line @typescript-eslint/no-unused-vars` se utiliza para desactivar temporalmente
+ * la regla `@typescript-eslint/no-unused-vars`, ya que la constante `prisma` es declarada pero no se utiliza en el código. 
+ * Esta desactivación es necesaria para evitar que ESLint arroje un error innecesario debido a la variable no utilizada,
+ * ya que la constante es utilizada solo para definir el tipo `Users`. 
+ * Esta situación es esperada en este caso porque el archivo está utilizando `prisma` para definir el tipo y no se espera
+ * una instancia activa del cliente Prisma en este archivo.
  */
 import { Injectable, NotFoundException  } from '@nestjs/common';
 import { PrismaDAL } from '../prisma/prisma.dal'
 import { PrismaClient } from '@prisma/client';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const prisma = new PrismaClient();
 export type Quote = Awaited<ReturnType<typeof prisma.quote.findFirst>>;
 
