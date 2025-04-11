@@ -45,6 +45,47 @@ JWT_EXPIRES_IN=1h
 ```
 &nbsp;
 
+## Iniciando
+Asegurate de instalar las dependencias, y asegurarte de que no tengas errores de compatibilidad.
+&nbsp;
+
+```bash
+cd server
+npm install
+
+// SOLO en caso de que estes teniendo complicaciones con las dependencias por otra dependencias de tu ecosistema local intenta:
+
+// Para evitar las incompatibilidad.
+npm install --legacy-peer-deps 
+# o
+// Obliga a instalarlos de igual manera, pero ten encuenta que podrias tener complicaciones ya que fuerzas la instalación por más de que no sean compatibles. (No recomedable)
+npm install --force
+```
+&nbsp;
+## Inicia prisma
+Inicia el cliente de la DB para poder continuar. (Es importante que tengas el archivo .env dentro de la raiz del server)
+&nbsp;
+
+```bash
+cd server
+cd prisma
+
+# Ejecuta el comando para generar el cliente de Prisma
+npx prisma generate
+# Te devolvera un mensaje de éxito.
+```
+
+## Inicia el server
+Una vez que hayas hecho todos los pasos, ejecuta el comando para inciar el server, deberia aparecerte un mensaje que inicio.
+&nbsp;
+
+```bash
+cd server
+npm run start:dev
+# Abrira el watch de Node.
+```
+&nbsp;
+
 ## ¿Por qué PostgreSQL?
 Porque pense la API a grande escala y no me quede solo con la parte de "challenge". Por lo tanto, para una API de tipo exchange es mejor utilizar una estructura relacional como **PostgreSQL** que permite definir relaciones claras entre entidades (usuarios, transacciones, etc.).
 
