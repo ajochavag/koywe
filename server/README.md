@@ -88,7 +88,7 @@ Nota:
 &nbsp;
 
 ```bash
-cd server
+# ./server
 npm run start:dev
 # Abrira el watch de Node.
 ```
