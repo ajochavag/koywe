@@ -2,6 +2,16 @@
 
 [Volver al README principal](../README.md)
 
+## Crea la Base de datos.
+Crea la base de datos en Postgres debe llamarse `koywe_db`, como la información del [README.md](../README.md)
+&nbsp;
+Notas:
+ - Puedes utilizar PgAdmin para poder crearla fácilmente.
+- `DATABASE_URL` es la URL de TU base de datos, deberias modificar la parte de la linea **("user:password" = "postgres:admin")** por las credenciales que usas. 
+- **@localhost:5432** es la configuración por default de postgres para la DB local.
+- **/koywe_db** es el nombre de la base de datos que debes crear (Puedes hacerlo desde PgAdmin si lo deseas). 
+
+&nbsp;
 
 ## Inicia prisma
 Inicia el cliente de la DB para poder continuar. (Es importante que tengas el archivo .env dentro de la raiz del server)

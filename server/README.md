@@ -83,6 +83,8 @@ Revisa el enlace con la información de la DB y por qué decidí utilizarla.
 # 3. SERVER
 ## Inicia el servidor
 Una vez que hayas hecho todos los pasos, ejecuta el comando para inciar el server, deberia aparecerte un mensaje que inicio.
+Nota:
+ - Asegurate de que estes en la ruta raiz para poder ejecutar el comando, de lo contrario devolver error 😊
 &nbsp;
 
 ```bash
