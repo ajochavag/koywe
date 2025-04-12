@@ -5,6 +5,8 @@
 Crear archivo .env.local en la raíz del proyecto Next.js y copia dentro lo siguiente: 
 Nota: Si el puerto 8000 ya lo tienes en uso, cambialo por un puerto libre, recuerda que el puerto debe ser el mismo que el de tu backend!
 
+**Asegurate de que tu archivo se llame `.env.local` de lo contrario tendras errores**
+
 ```bash
 # archivo .env.local
 NEXT_PUBLIC_API_URL=http://localhost:8000
