@@ -4,6 +4,8 @@
 
 ## Crea la Base de datos.
 Crea la base de datos en Postgres debe llamarse `koywe_db`, como la información del [README.md](../README.md)
+
+
 &nbsp;
 Notas:
  - Puedes utilizar PgAdmin para poder crearla fácilmente.
@@ -14,7 +16,10 @@ Notas:
 &nbsp;
 
 ## Inicia prisma
-Inicia el cliente de la DB para poder continuar. (Es importante que tengas el archivo .env dentro de la raiz del server)
+
+**Crea** las tablas para que coincidan con el schema `schema.prisma`.
+Luego inicia el cliente de la DB para poder continuar. (Es importante que tengas el archivo .env dentro de la raiz del server)
+
 &nbsp;
 Nota:
  - Si en algun momento tienes problemas con que prisma no exporta PrismaClient:
@@ -28,6 +33,8 @@ Nota:
 cd server
 cd prisma
 
+# Crear las tablas en tu base de datos, devolvera un mensaje cuando termine
+npx prisma db push
 # Ejecuta el comando para generar el cliente de Prisma
 npx prisma generate
 # Te devolvera un mensaje de éxito.
