@@ -11,11 +11,7 @@ export const metadata: Metadata = {
   description: 'Portal para swapear tu moneda favorita 💚⚡',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default async function RootLayout({ children, }: { children: React.ReactNode}) {
   return (
     <html lang="es">
       <body className={kanitFonts.className}>{children}
