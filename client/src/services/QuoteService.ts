@@ -7,7 +7,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
 export const createQuote = async (data: QuoteRequest): Promise<QuoteResponse> => {
   const response = await axios.post(`${BASE_URL}/quote`, data, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('KOWEY-JHjskEJEk3ksojñ-SWAP')}`,
+      Authorization: `Bearer ${localStorage.getItem('KOWEY-TOKEN-SWAP')}`,
     },
   });
   return response.data;
@@ -16,7 +16,7 @@ export const createQuote = async (data: QuoteRequest): Promise<QuoteResponse> =>
 export const getQuoteById = async (id: string): Promise<QuoteResponse> => {
   const response = await axios.get(`${BASE_URL}/quote/${id}`, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('KOWEY-JHjskEJEk3ksojñ-SWAP')}`,
+      Authorization: `Bearer ${localStorage.getItem('KOWEY-TOKEN-SWAP')}`,
     },
   });
   return response.data;
