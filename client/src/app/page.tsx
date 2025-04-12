@@ -27,7 +27,6 @@ export default function Login() {
           expires: 1,
           sameSite: 'strict',
         });
-        console.log('Token:', res.access_token);
         router.push('/home');
       }
       reset();
