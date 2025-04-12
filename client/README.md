@@ -10,6 +10,8 @@ Nota: Si el puerto 8000 ya lo tienes en uso, cambialo por un puerto libre, recue
 ```bash
 # archivo .env.local
 NEXT_PUBLIC_API_URL=http://localhost:8000
+#JWT
+JWT_SECRET=bCGN6h4sFjqbsfjXfnqos3YdKzGf7JjT/oDc9qE53ZqAeRPLQfBbqZ1S9Z0n8d3jW1/WSKmL7OZ7N+0YX9R0JbC
 ```
 NEXT_PUBLIC_API_URL es obligatorio para exponer la variable al cliente (ya que estás usándola en código del cliente: use client).
 
