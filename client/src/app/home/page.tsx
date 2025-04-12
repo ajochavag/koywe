@@ -1,9 +1,10 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createQuote, getQuoteById } from '@/services/QuoteService';
 import { QuoteResponse } from '@/models/quote/quote';
 import Image from 'next/image';
+import Cookies from 'js-cookie';
 
 export default function Home() {
   const router = useRouter();
@@ -50,7 +51,8 @@ export default function Home() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('KOWEY-JHjskEJEk3ksojñ-SWAP');
+    Cookies.remove('KOWEY-TOKEN-SWAP');
+    localStorage.removeItem('KOWEY-TOKEN-SWAP');
     router.push('/');
   };
 

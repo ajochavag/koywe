@@ -6,6 +6,7 @@ import Image from 'next/image';
 import logo from '../../public/koywe2.svg';
 import { authService } from '@/services/AuthService';
 import { toast } from 'react-toastify';
+import Cookies from 'js-cookie';
 
 export default function Login() {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -20,7 +21,12 @@ export default function Login() {
       } else {
         const res = await authService.login(data.login, data.password);
         toast.success('Inicio de sesión exitoso');
-        localStorage.setItem('KOWEY-JHjskEJEk3ksojñ-SWAP', res.access_token);
+        localStorage.setItem('KOWEY-TOKEN-SWAP', res.access_token);
+        Cookies.set('KOWEY-TOKEN-SWAP', res.access_token, {
+          path: '/',
+          expires: 1,
+          sameSite: 'strict',
+        });
         console.log('Token:', res.access_token);
         router.push('/home');
       }
