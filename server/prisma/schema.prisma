@@ -14,6 +14,8 @@ model Quote {
   to              String
   rate            Float
   convertedAmount Float
+  userId          String?
+  user            User?    @relation(fields: [userId], references: [id])
   timestamp       DateTime @default(now())
   expiresAt       DateTime
 }
