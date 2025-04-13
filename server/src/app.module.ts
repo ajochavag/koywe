@@ -13,6 +13,7 @@ import { QuoteModule } from './modules/quote/quote.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { AuthModule } from './authentication/auth.module';
 import { UserModule } from './modules/user/user.module';
+import { ApiModuele } from './modules/api/api.module'
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -24,6 +25,7 @@ import { ConfigModule } from '@nestjs/config';
     PrismaModule,
     AuthModule,
     UserModule,
+    ApiModuele,
     ThrottlerModule.forRoot([
       {
         ttl: 60000, //Limita el tiempo en el que se ejecutan las solicitudes.
