@@ -2,7 +2,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createQuote, getQuoteById } from '@/services/QuoteService';
+import { getCurrencies } from '@/services/ApiServices'
 import { QuoteResponse } from '@/models/quote/quote';
+import { CurrenciesResponse } from '@/models/currencies/CurrenciesResponse';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
 
@@ -16,6 +18,16 @@ export default function Home() {
 
   const [quoteId, setQuoteId] = useState('');
   const [quoteDetails, setQuoteDetails] = useState<QuoteResponse | null>(null);
+  const [currency, setCurrency] = useState<CurrenciesResponse | null>(null);
+
+  useEffect(() => {
+    const fetchCurrencies = async () => {
+      const data = await getCurrencies();
+      setCurrency(data); 
+    };
+
+    fetchCurrencies();
+  }, []);
 
   const handleCreateQuote = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,25 +110,36 @@ export default function Home() {
               placeholder="Monto"
               className="w-full p-2 rounded-lg border text-black focus:outline-none"
             />
-          
             <div className="flex gap-3">
-              <input
-                type="text"
+              <select
                 value={from}
-                onChange={(e) => setFrom(e.target.value.trim())}
-                placeholder="Desde (e.g. USD)"
+                onChange={(e) => setFrom(e.target.value)}
                 className="w-1/2 p-2 rounded-lg border text-black focus:outline-none"
-              />
-          
-              <input
-                type="text"
+              >
+                <option value="">Desde...</option>
+                {currency?.map((currency) => (
+                  <option key={currency} value={currency}>
+                    {currency}
+                  </option>
+                ))}
+              </select>
+
+              <p className="text-lg text-black font-bold mb-4 text-center">⇄</p>
+              
+              <select
                 value={to}
-                onChange={(e) => setTo(e.target.value.trim())}
-                placeholder="Hacia (e.g. CLP)"
+                onChange={(e) => setTo(e.target.value)}
                 className="w-1/2 p-2 rounded-lg border text-black focus:outline-none"
-              />
+              >
+                <option value="">Hacia...</option>
+                {currency?.map((currency) => (
+                  <option key={currency} value={currency}>
+                    {currency}
+                  </option>
+                ))}
+              </select>
             </div>
-          
+
             <button
               type="submit"
               className="w-full bg-[var(--color-principal)] hover:bg-emerald-900 text-white py-2 rounded-lg transition"
