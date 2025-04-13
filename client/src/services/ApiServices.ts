@@ -8,6 +8,11 @@ if (!BASE_URL) {
 }
 
 export async function getCurrencies(): Promise<CurrenciesResponse> {
-  const response = await axios.get(`${BASE_URL}/currencies`);
-  return response.data;
+  try {
+    const response = await axios.get(`${BASE_URL}/currencies`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch currencies:', error);
+    return [];
+  }
 }
