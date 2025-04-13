@@ -120,6 +120,10 @@ describe('AuthService', () => {
 
       const hashedPassword = await bcrypt.hash(userDto.password, 10);
 
+      const bcryptCompareSpy = jest.spyOn(bcrypt, 'compare');
+      (bcryptCompareSpy as jest.Mock).mockResolvedValue(false);
+
+
       mockUserService.findByUsername.mockResolvedValue({
         id: 'user-id',
         email: 'test@test.com',
@@ -133,6 +137,10 @@ describe('AuthService', () => {
       await expect(authService.signin(userDto.username, 'wrongpassword')).rejects.toThrow(
         'Credenciales de password inválidas',
       );
+
+      expect(bcryptCompareSpy).toHaveBeenCalledWith('wrongpassword', hashedPassword);
+      bcryptCompareSpy.mockRestore();
+
     });
   });
 });
