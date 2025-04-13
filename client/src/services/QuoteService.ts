@@ -2,7 +2,11 @@
 import axios from 'axios';
 import { QuoteRequest, QuoteResponse } from '@/models/quote/quote';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
+
+if (!BASE_URL) {  
+  console.error('NEXT_PUBLIC_API_URL environment variable is not defined');  
+}
 
 export const createQuote = async (data: QuoteRequest): Promise<QuoteResponse> => {
   const response = await axios.post(`${BASE_URL}/quote`, data, {
