@@ -28,15 +28,18 @@ export class SanitizePipe implements PipeTransform {
       // Sanitiza un string simple
       return sanitizeHtml(value);
     }
-
+    if (Array.isArray(value)) {
+      // Sanitiza cada elemento del array
+      return value.map(item => this.transform(item, _metadata));
+    }
     if (typeof value === 'object' && value !== null) {
       // Sanitiza un objeto recorriendo cada propiedad
       return this.sanitizeObject(value);
     }
-
     // Devuelve tal cual si no es string ni objeto (ej: números, booleanos)
     return value;
   }
+}
 
   private sanitizeObject(obj: any): any {
     const sanitized: any = {};
