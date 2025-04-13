@@ -1,6 +1,10 @@
  Se creo una mini web para probar los endpoints del server.
  [info sobre IA](docs/integracionIA.md)
 
+# Client - Koywe API
+
+ &nbsp;
+
 ## (Requisito) Crea el archivo .env.local
 Crear archivo .env.local en la raíz del proyecto Next.js y copia dentro lo siguiente: 
 Nota: Si el puerto 8000 ya lo tienes en uso, cambialo por un puerto libre, recuerda que el puerto debe ser el mismo que el de tu backend!

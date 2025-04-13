@@ -4,11 +4,20 @@ Servidor backend construido con NestJS, Prisma y PostgreSQL. Esta API permite ge
 
 [🤖 Integración de IA](./docs/integracionIA.md)
 
+[🔍 Ejecución de pruebas](./docs/pruebas.md)
+
+[🛢️ Base de datos](./docs/opcionDeDB.md)
+
+🧪 Para los test utiliza el comando `npm run test` en la raiz de la carpeta server.
+
+
+
+
 ---
 &nbsp;
 
 
-## (Requisito) Crea el archivo .env
+# (Requisito) Crea el archivo .env
 Crear archivo .env en la raíz del proyecto NEST.js y copia dentro lo siguiente:
 
 #### Notas:
