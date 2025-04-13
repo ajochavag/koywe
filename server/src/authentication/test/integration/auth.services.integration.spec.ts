@@ -68,6 +68,10 @@ describe('AuthService', () => {
       expect(result.message).toBe('Se creo el usuario exitosamente');
       expect(result.user.email).toBe(userDto.email);
       expect(result.user.username).toBe(userDto.username);
+      expect(mockUserService.create).toHaveBeenCalledTimes(1);
+      expect(mockUserService.create.mock.calls[0][0].email).toBe(userDto.email);
+      expect(mockUserService.create.mock.calls[0][0].username).toBe(userDto.username);
+      expect(mockUserService.create.mock.calls[0][0].password).not.toBe(userDto.password);
     });
   });
 
