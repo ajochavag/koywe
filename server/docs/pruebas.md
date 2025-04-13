@@ -8,6 +8,18 @@ Pero puedes utilizar los servicios de Postman o algún otro servicio que desees.
 
 &nbsp;
 
+## Tabla de Endpoint
+
+| Metodo | Endpoint          | Descripción        | Autenticación  |
+| ------ | ----------------- | -------------------|----------------|
+| POST   | `/auth/register`  | Crear usuario.     |      ❌        | 
+| POST   | `/auth/login`     | Iniciar sesión.    |      ❌        |
+| POST   | `/quote`          | Crear cotización   |      ✅        |
+| GET    | `/quote/:id`      | Buscar cotización  |      ✅        |
+| GET    | `/currencies`     | Consultar divisas  |      ✅        |
+
+&nbsp;
+
 ## 1. Obtención de JWT.
 
 Para empezar necesitas el token de validación, se obtiene haciendo un POST a la ruta `auth/signup`.
