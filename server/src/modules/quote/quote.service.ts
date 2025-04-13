@@ -8,7 +8,6 @@
  *
  * Responsabilidades (añade las nuevas responsabilidades):
  * - Crear nuevas cotizaciones basadas en tasas de cambio actualizadas.
- * - Validar la vigencia y consistencia de una cotización.
  * - Consultar o listar cotizaciones según criterios definidos.
  * - Aplicar reglas de negocio específicas sobre cotizaciones.
  *
@@ -31,9 +30,15 @@ export class QuoteService {
   ) {}
 
   async createQuote(dto: QuoteDto) {
-    const rate = await this.provider.getExchangeRate(dto.from, dto.to);
-    const quote = this.bll.calculateQuote(dto, rate);
-    await this.dal.createQuote(quote);
-    return quote;
+    try{
+      const rate = await this.provider.getExchangeRate(dto.from, dto.to);
+      const quote = this.bll.calculateQuote(dto, rate);
+      await this.dal.createQuote(quote);
+      return quote;
+    }catch(error){
+      console.error('Error al crear la cotización', error)
+      throw new Error('Error al crear la cotización')
+    }
+
   }
 }
