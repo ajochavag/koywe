@@ -33,7 +33,7 @@ export class UserService {
       });
     }catch(error){
       if (error.code === 'P2002') {
-       throw new ConflictException(`User with this ${error.meta.target[0]} already exists`);
+       throw new ConflictException(`El usuario con este ${error.meta.target[0]} ya existe`);
       }
      throw error;
     }
