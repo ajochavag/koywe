@@ -1,6 +1,6 @@
 'use client';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '../../public/koywe2.svg';
@@ -13,13 +13,23 @@ export default function Login() {
   const { register, handleSubmit, reset } = useForm();
   const router = useRouter();
 
+  useEffect(() => {
+    Cookies.remove('KOWEY-TOKEN-SWAP');
+    localStorage.removeItem('KOWEY-TOKEN-SWAP');
+  }, [])
+
   const onSubmit = async (data: any) => {
+    
+    const email = data?.email?.trim();
+    const password = data.password;
+    const login = data?.login?.trim();
+
     try {
       if (isRegistering) {
-        const res = await authService.register(data.email, data.password, data.login);
+        const res = await authService.register(email, password, login);
         toast.success(res.message);
       } else {
-        const res = await authService.login(data.login, data.password);
+        const res = await authService.login(login, password);
         toast.success('Inicio de sesión exitoso');
         localStorage.setItem('KOWEY-TOKEN-SWAP', res.access_token);
         Cookies.set('KOWEY-TOKEN-SWAP', res.access_token, {
