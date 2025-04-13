@@ -36,8 +36,10 @@ dotenv.config();
     UserModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '15m' },
+      secret: process.env.JWT_SECRET || (() => {  
+        throw new Error('JWT_SECRET is not defined in environment variables');  
+      })(),  
+      signOptions: { expiresIn: process.env.JWT_EXPIRES_IN || '15m' },
     }),
   ],
   providers: [AuthService, JwtStrategy],
