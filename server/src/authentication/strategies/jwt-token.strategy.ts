@@ -8,8 +8,11 @@ dotenv.config();
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_SECRET,
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),  
+      secretOrKey: process.env.JWT_SECRET || (() => {  
+        throw new Error('JWT_SECRET is not defined in environment variables');  
+      })(),  
+      ignoreExpiration: false,  
     });
   }
 
