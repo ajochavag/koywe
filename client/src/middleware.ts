@@ -21,8 +21,10 @@ export async function middleware(request: NextRequest) {
   if (token) {
     try {
       // Verificar el token usando `jose`
-      await jwtVerify(token, new TextEncoder().encode(SECRET_KEY));
-
+      const { payload } = await jwtVerify(token, new TextEncoder().encode(SECRET_KEY))
+      if (payload.exp && Date.now() >= payload.exp * 1000) {
+        throw new Error('Token expirado');
+      }
       // Si el token es válido, continúa
       return NextResponse.next();
     } catch (err) {
