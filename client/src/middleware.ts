@@ -2,7 +2,11 @@ import { NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
 import type { NextRequest } from 'next/server'
 
-const SECRET_KEY = process.env.JWT_SECRET;
+const SECRET_KEY = process.env.JWT_SECRET || '';  
+
+if (!SECRET_KEY) {  
+  console.error('JWT_SECRET is not defined in environment variables');  
+} 
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get('KOWEY-TOKEN-SWAP')?.value;
