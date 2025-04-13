@@ -11,7 +11,7 @@
  * Esta situación es esperada en este caso porque el archivo está utilizando `prisma` para definir el tipo y no se espera una instancia activa del cliente Prisma en este archivo.
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';  
 import { PrismaDAL } from '../prisma/prisma.dal';
 import { PrismaClient } from '@prisma/client';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -23,13 +23,20 @@ export class UserService {
   constructor(private prisma: PrismaDAL) {}
 
   async create(data: { email: string; password: string; username: string }): Promise<Users> {
-    return this.prisma.user.create({
-      data: {
-        email: data.email,
-        password: data.password,
-        username: data.username,
-      },
-    });
+    try{
+      return this.prisma.user.create({
+        data: {
+          email: data.email,
+          password: data.password,
+          username: data.username,
+        },
+      });
+    }catch(error){
+      if (error.code === 'P2002') {
+       throw new ConflictException(`User with this ${error.meta.target[0]} already exists`);
+      }
+     throw error;
+    }
   }
 
   async findByUsername(username: string) {
