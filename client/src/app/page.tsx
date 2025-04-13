@@ -1,6 +1,6 @@
 'use client';
 import { useForm } from 'react-hook-form';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '../../public/koywe2.svg';
@@ -12,11 +12,6 @@ export default function Login() {
   const [isRegistering, setIsRegistering] = useState(false);
   const { register, handleSubmit, reset } = useForm();
   const router = useRouter();
-
-  useEffect(() => {
-    Cookies.remove('KOWEY-TOKEN-SWAP');
-    localStorage.removeItem('KOWEY-TOKEN-SWAP');
-  }, [])
 
   const onSubmit = async (data: any) => {
     
@@ -42,7 +37,8 @@ export default function Login() {
       reset();
     } catch (err: any) {
       console.error(err);
-      toast.error('Error en autenticación');
+      const errorMessage = err.response?.data?.message || 'Error en autenticación';  
+      toast.error(errorMessage);
     }
   };
 
@@ -65,6 +61,7 @@ export default function Login() {
 
         <input
           {...register('login')}
+          required 
           placeholder="Usuario"
           className="p-3 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-secundario)]"
         />
@@ -72,6 +69,7 @@ export default function Login() {
         {isRegistering && (
           <input
             {...register('email')}
+            required 
             type="email"
             placeholder="Email"
             className="p-3 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-secundario)]"
@@ -80,6 +78,7 @@ export default function Login() {
 
         <input
           {...register('password')}
+          required 
           type="password"
           placeholder="Contraseña"
           className="p-3 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-secundario)]"
