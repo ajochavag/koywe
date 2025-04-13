@@ -76,13 +76,23 @@ export default function Login() {
           />
         )}
 
-        <input
-          {...register('password')}
+        <input  
+          {...register('password', { 
+            required: true,  
+            minLength: {  
+              value: 6,  
+              message: "La contraseña debe tener al menos 6 caracteres"  
+            },  
+            pattern: {  
+              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,  
+              message: "La contraseña debe incluir al menos una letra mayúscula, una minúscula, un número y un carácter especial"  
+            }  
+          })}  
           required 
-          type="password"
-          placeholder="Contraseña"
-          className="p-3 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-secundario)]"
-        />
+          type="password"  
+          placeholder="Contraseña"  
+          className="p-3 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-secundario)]"  
+        />  
 
         <button
           type="submit"
