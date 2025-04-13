@@ -27,6 +27,7 @@ export class ApiService {
       const currencies = list.sort((a, b) => a.localeCompare(b));
       return currencies
     } catch (error) {
+      console.error('Error fetching currencies:', error.response?.data || error.message);
       throw new HttpException('Error al obtener las divisas', HttpStatus.BAD_GATEWAY);
     }
   }
