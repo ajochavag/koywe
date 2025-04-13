@@ -6,4 +6,4 @@ import { ApiService } from './api.services'
   controllers: [ApiController],
   providers: [ApiService],
 })
-export class ApiModuele {}
+export class ApiModule {}
