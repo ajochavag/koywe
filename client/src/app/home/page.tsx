@@ -7,6 +7,7 @@ import { QuoteResponse } from '@/models/quote/quote';
 import { CurrenciesResponse } from '@/models/currencies/CurrenciesResponse';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
+import { toast } from 'react-toastify'
 
 export default function Home() {
   const router = useRouter();
@@ -44,23 +45,27 @@ export default function Home() {
   
       setQuoteResult(data);
     } catch (error) {
-      alert('Error al crear la cotización');
+      toast('Error al crear la cotización');
       console.error(error);
     }
   };
   
-  const handleGetQuote = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const trimmedId = quoteId.trim();
-      const data = await getQuoteById(trimmedId);
-      setQuoteDetails(data);
-      setQuoteId('');
-    } catch (error) {
-      alert('Cotización no encontrada o expirada');
-      console.error(error);
-    }
-  };
+  const handleGetQuote = async (e: React.FormEvent) => {  
+    e.preventDefault();  
+    try {  
+      const trimmedId = quoteId.trim();  
+      if (!trimmedId) {  
+        toast('Por favor ingrese un ID de cotización');  
+        return;  
+      }  
+      const data = await getQuoteById(trimmedId);  
+      setQuoteDetails(data);  
+      setQuoteId('');  
+    } catch (error) {  
+      toast('Cotización no encontrada o expirada');  
+      console.error(error);  
+    }  
+  };  
 
   const handleLogout = () => {
     Cookies.remove('KOWEY-TOKEN-SWAP');
