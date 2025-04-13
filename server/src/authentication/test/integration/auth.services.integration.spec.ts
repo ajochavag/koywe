@@ -81,6 +81,9 @@ describe('AuthService', () => {
 
       const hashedPassword = await bcrypt.hash(userDto.password, 10);
 
+      const bcryptCompareSpy = jest.spyOn(bcrypt, 'compare');
+      (bcryptCompareSpy as jest.Mock).mockResolvedValue(true);
+
       mockUserService.findByUsername.mockResolvedValue({
         id: 'user-id',
         email: 'test@test.com',
@@ -95,6 +98,10 @@ describe('AuthService', () => {
         sub: 'user-id',
         email: 'test@test.com',
       });
+      expect(bcryptCompareSpy).toHaveBeenCalledWith(userDto.password, hashedPassword);
+   
+
+      bcryptCompareSpy.mockRestore();
     });
 
     it('Debería lanzar UnauthorizedException si no se encuentra el usuario', async () => {
