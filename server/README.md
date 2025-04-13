@@ -19,6 +19,7 @@ Servidor backend construido con NestJS, Prisma y PostgreSQL. Esta API permite ge
 
 # (Requisito) Crea el archivo .env
 Crear archivo .env en la raíz del proyecto NEST.js y copia dentro lo siguiente:
+*(Te deje un archivo .env de prueba, solo tienes que reenombrarlo de .env.example a .env)*
 
 #### Notas:
 - Si el puerto 8000 ya lo tienes en uso, cambialo por un puerto libre, recuerda configurar el mismo puerto en la ruta de frontend.
