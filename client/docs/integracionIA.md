@@ -1,3 +1,5 @@
+*El estilo de este readme fue hecho con OpenIA y ajustado manualmente para declarar su verdadera función*
+
 # 🤖 Uso de Inteligencia Artificial en el Proyecto
 
 [Volver al README principal](../README.md)
@@ -11,55 +13,47 @@ Durante el desarrollo de la interfaz de usuario (UI) de esta aplicación, se uti
 
 Asistencia con IA:
 
-Se solicitó a la IA la generación de estructuras HTML y JSX estilizadas para componentes de autenticación (Login.tsx) y formularios de consulta (Home.tsx).
-
-La IA proporcionó estructuras modernas, limpias y con buenas prácticas de accesibilidad y responsive design.
+Se solicitó a la IA la generación de estructuras HTML y JTSX estilizadas con los estilos que adquirimos anteriormente de la página de Koywe inspeccionando la paleta de colores.
 
 ✅ Beneficios:
 
 Reducción significativa del tiempo de maquetado.
 
-Aplicación directa de estilos con buenas convenciones de TailwindCSS y variables personalizadas como --color-principal, --color-secundario, etc.
-
 Prototipado rápido sin necesidad de diseñador UI inicial.
 
 &nbsp;
 
-## 2. 🚶‍♂️📲 Flujo de Usuario y Experiencia UX 
-Librerias:
-- [npm i react-toastify](https://www.npmjs.com/package/react-toastify)
-
 &nbsp;
 
-Se pidieron sugerencias para el flujo de autenticación con login/registro en un solo componente (Login.tsx) con conmutación dinámica.
-
-Se consultó sobre validaciones mínimas, sugerencias de accesibilidad y uso de react-toastify para feedback del usuario.
-
-✅ Beneficios:
-
-Mejora en la experiencia de usuario sin múltiples rutas innecesarias.
-
-Navegación más clara y adaptada a dispositivos móviles.
-
-Inclusión de feedback visual amigable para usuarios finales
-
-&nbsp;
-
-## 3. 🧩✔️ Manejo de Estado y Validación 
+## 2. 🧩✔️ Manejo de Estado y Validación 
 
 Asistencia con IA:
 
 Recomendaciones sobre el uso de react-hook-form para gestionar formularios de manera sencilla y escalable.
 
-Sugerencias sobre cómo manejar estados con useState, validaciones básicas y limpieza de formularios (reset()).
-
 ✅ Beneficios:
 
 Código más limpio y fácil de mantener.
 
-Validaciones frontales implementadas con mejor estructura.
+Validaciones frontales.
 
 Mejora en el control de errores y respuestas.
+
+&nbsp;
+
+## 2. 🔒✔️ Middleware de Seguridad con `jose`
+
+Se implementó para gestionar:
+- La verificación asíncrona de tokens JWT.
+- **protección de rutas** [jose - npm](https://www.npmjs.com/package/jose), combinandolo con la función middleware que ofrece Next como herramienta de Server Side Rendering.
+
+✅ Beneficios:
+
+- Me permitio evitar la mala práctica de usar useEffect en el cliente.
+- Seguridad extra a las Cookies consultando desde nuestro back-end.
+- Evitar lo que se conoce como *"navegación directa"* o *"acceso directo por URL"*.
+  - No se puede saltear la autenticación.
+  - Evitamos que: Next renderice 1 segundo la página antes de cargar el contenido del storage (lo que permite ver al usuario 1 segundo su contenido).
 
 &nbsp;
 
