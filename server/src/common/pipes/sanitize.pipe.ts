@@ -39,7 +39,6 @@ export class SanitizePipe implements PipeTransform {
     // Devuelve tal cual si no es string ni objeto (ej: números, booleanos)
     return value;
   }
-}
 
   private sanitizeObject(obj: any): any {
     const sanitized: any = {};
@@ -51,10 +50,11 @@ export class SanitizePipe implements PipeTransform {
         typeof val === 'string'
           ? sanitizeHtml(val) // Sanitiza strings individuales
           : typeof val === 'object' && val !== null
-            ? this.sanitizeObject(val) // Llama recursivamente si es un objeto anidado
-            : val; // Deja valores no string ni objeto sin modificar
+          ? this.sanitizeObject(val) // Llama recursivamente si es un objeto anidado
+          : val; // Deja valores no string ni objeto sin modificar
     }
 
     return sanitized;
   }
 }
+
